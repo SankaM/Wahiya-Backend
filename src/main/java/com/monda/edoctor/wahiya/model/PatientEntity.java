@@ -3,16 +3,17 @@ package com.monda.edoctor.wahiya.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.UUID;
 
-@Table(name = "basic_patient_info", schema = "wahiya")
+@Table(name = "patient", schema = "wahiya")
 @Entity
 @Setter
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BasicPatientInfoEntity {
+public class PatientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +26,16 @@ public class BasicPatientInfoEntity {
     @Column(name="age")
     private Integer age;
 
-    @Column(name="doctorId")
-    private String doctorId;
+    @Column(name="user_name")
+    private Integer userName;
+
+    @Column(name="birth_date")
+    private LocalDate birthDate;
+
+    @Column(name="email")
+    private String email;
+
+    @Column(name="health_profile")
+    private String healthProfile;
 
 }

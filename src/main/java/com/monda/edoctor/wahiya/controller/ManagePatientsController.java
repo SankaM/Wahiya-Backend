@@ -1,8 +1,7 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.PatientSummary;
 import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
-import com.monda.edoctor.wahiya.model.BasicPatientInfoEntity;
+import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.service.ManagePatientsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +17,18 @@ import java.util.UUID;
 @RequestMapping("/v1")
 public class ManagePatientsController {
 
-    private ManagePatientsService managePatientsService;
-
     @Autowired
-    public ManagePatientsController(ManagePatientsService managePatientsService){
-        this.managePatientsService = managePatientsService;
+    public ManagePatientsService managePatientsService;
+
+    @GetMapping(value = "/doctor/{doctorId}/patients/summary")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PatientEntity> getPatientsSummaryOfDoctor(@PathVariable("doctorId") String doctorId) {
+        return managePatientsService.getPatientsSummaryOfDoctor(doctorId);
     }
 
     @GetMapping(value = "/doctor/{doctorId}/patients/summary")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<BasicPatientInfoEntity> getPatientsSummaryOfDoctor(@PathVariable("doctorId") String doctorId) {
+    public PatientEntity getPatientsSummaryOfDoctor(@PathVariable("doctorId") String doctorId) {
         return managePatientsService.getPatientsSummaryOfDoctor(doctorId);
     }
 
@@ -35,7 +36,7 @@ public class ManagePatientsController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public void registerPatient(@PathVariable("doctorId") String doctorId,
                                 @RequestBody RegisterPatientRequest registerPatientRequest) {
-        managePatientsService.registerPatient(BasicPatientInfoEntity.builder().name(registerPatientRequest.getName())
+        managePatientsService.registerPatient(PatientEntity.builder().name(registerPatientRequest.getName())
                 .doctorId(doctorId).age(registerPatientRequest.getAge()).build());
     }
 

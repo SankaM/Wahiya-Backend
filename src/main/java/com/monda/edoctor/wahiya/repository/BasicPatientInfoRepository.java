@@ -1,6 +1,6 @@
 package com.monda.edoctor.wahiya.repository;
 
-import com.monda.edoctor.wahiya.model.BasicPatientInfoEntity;
+import com.monda.edoctor.wahiya.model.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.UUID;
  *
  * @author Priyantha Weerakoon
  */
-public interface BasicPatientInfoRepository extends JpaRepository<BasicPatientInfoEntity, UUID> {
+public interface BasicPatientInfoRepository extends JpaRepository<PatientEntity, UUID> {
 
     void deleteByPatientId(UUID patientId);
 
-    List<BasicPatientInfoEntity> findByDoctorId(String doctorId);
+    List<PatientEntity> findByDoctorId(String doctorId);
 }

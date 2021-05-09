@@ -12,19 +12,15 @@ import java.util.*;
 @Setter
 public class ManagePatientsService {
 
+    @Autowired
     private BasicPatientInfoRepository basicPatientInfoRepository;
 
-    @Autowired
-    public ManagePatientsService(BasicPatientInfoRepository basicPatientInfoRepository){
-        this.basicPatientInfoRepository = basicPatientInfoRepository;
-    }
-
-    public List<BasicPatientInfoEntity> getPatientsSummaryOfDoctor(String doctorId){
+    public List<PatientEntity> getPatientsSummaryOfDoctor(String doctorId){
         return basicPatientInfoRepository.findByDoctorId(doctorId);
     }
 
-    public void registerPatient(BasicPatientInfoEntity basicPatientInfoEntity){
-        basicPatientInfoRepository.save(basicPatientInfoEntity);
+    public void registerPatient(PatientEntity patientEntity){
+        basicPatientInfoRepository.save(patientEntity);
     }
 
     public void deletePatient(UUID patientId){

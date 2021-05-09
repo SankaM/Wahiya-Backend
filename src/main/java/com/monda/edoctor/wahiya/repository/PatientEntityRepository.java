@@ -11,9 +11,11 @@ import java.util.UUID;
  *
  * @author Priyantha Weerakoon
  */
-public interface BasicPatientInfoRepository extends JpaRepository<PatientEntity, UUID> {
+public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID> {
 
     void deleteByPatientId(UUID patientId);
 
-    List<PatientEntity> findByDoctorId(String doctorId);
+    List<PatientEntity> findByDoctorIdAndIsActive(String doctorId, Boolean isActive);
+
+    PatientEntity findByDoctorIdAndPatientId(String doctorId, UUID patientId);
 }

@@ -27,7 +27,7 @@ public class PatientEntity {
     private Integer age;
 
     @Column(name="user_name")
-    private Integer userName;
+    private String userName;
 
     @Column(name="birth_date")
     private LocalDate birthDate;
@@ -35,7 +35,16 @@ public class PatientEntity {
     @Column(name="email")
     private String email;
 
+    @Column(name="mobile")
+    private String mobile;
+
     @Column(name="health_profile")
     private String healthProfile;
+
+    @Column(name="doctor_id")
+    private String doctorId;
+
+    @Column(name="is_active")
+    private Boolean isActive;
 
 }

@@ -43,7 +43,7 @@ public class ManagePatientsController {
 
     @DeleteMapping(value = "/doctors/{doctorId}/patients/{patientId}/inactive")
     @ResponseStatus(code = HttpStatus.OK)
-    public void removePatient(@PathVariable("doctorId") String doctorId,
+    public void inactivePatient(@PathVariable("doctorId") String doctorId,
                               @PathVariable("patientId") UUID patientId) {
         managePatientsService.inactivePatient(doctorId, patientId);
     }

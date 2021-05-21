@@ -20,6 +20,32 @@ public class ManagePatientsController {
 
     @Autowired
     public ManagePatientsService managePatientsService;
+// Get patient detail will return only patient basic detail and get prescription by patient id new API move to here?
+    // Issue prescription API
+    @GetMapping(value = "/doctors/{doctorId}/patients/summary")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PatientSummary> getPatientsSummaryOfDoctor(@PathVariable("doctorId") String doctorId) {
+        return managePatientsService.getPatientsSummaryOfDoctor(doctorId);
+    }
 
+    @GetMapping(value = "/doctors/{doctorId}/patients/{patientId}/details")
+    @ResponseStatus(code = HttpStatus.OK)
+    public PatientEntity getPatientDetails(@PathVariable("doctorId") String doctorId,
+                                           @PathVariable("patientId") UUID patientId) {
+        return managePatientsService.getPatientDetails(doctorId, patientId);
+    }
 
+    @PostMapping(value = "/doctors/{doctorId}/patients/register")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void registerPatient(@PathVariable("doctorId") String doctorId,
+                                @RequestBody RegisterPatientRequest registerPatientRequest) {
+        managePatientsService.registerPatient(registerPatientRequest, doctorId);
+    }
+
+    @DeleteMapping(value = "/doctors/{doctorId}/patients/{patientId}/inactive")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void inactivePatient(@PathVariable("doctorId") String doctorId,
+                              @PathVariable("patientId") UUID patientId) {
+        managePatientsService.inactivePatient(doctorId, patientId);
+    }
 }

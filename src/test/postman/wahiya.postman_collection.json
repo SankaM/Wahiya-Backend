@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "2184c5e6-46c5-4a87-ae63-1523d350293d",
+		"name": "wahiya",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"test1\",\n    \"password\": \"password1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{wahiya_url}}/v1/doctor/login",
+					"host": [
+						"{{wahiya_url}}"
+					],
+					"path": [
+						"v1",
+						"doctor",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get patients summary of doctor",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wahiya_url}}/v1/doctors/EDR1/patients/summary",
+					"host": [
+						"{{wahiya_url}}"
+					],
+					"path": [
+						"v1",
+						"doctors",
+						"EDR1",
+						"patients",
+						"summary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get patient's basic details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3005/v1/doctors/EDR1/patients/f8edc42e-4b6f-4298-be7d-9024621a70cb/details",
+					"host": [
+						"localhost"
+					],
+					"port": "3005",
+					"path": [
+						"v1",
+						"doctors",
+						"EDR1",
+						"patients",
+						"f8edc42e-4b6f-4298-be7d-9024621a70cb",
+						"details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Inactive a patient",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{wahiya_url}}/v1/doctors/EDR1/patients/f8edc42e-4b6f-4298-be7d-9024621a70cb/inactive",
+					"host": [
+						"{{wahiya_url}}"
+					],
+					"path": [
+						"v1",
+						"doctors",
+						"EDR1",
+						"patients",
+						"f8edc42e-4b6f-4298-be7d-9024621a70cb",
+						"inactive"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register a patient by doctor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Awesome\",\n    \"age\": 35,\n    \"mobile\": \"071111111\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{wahiya_url}}/v1/doctors/EDR1/patients/register",
+					"host": [
+						"{{wahiya_url}}"
+					],
+					"path": [
+						"v1",
+						"doctors",
+						"EDR1",
+						"patients",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -14,4 +14,5 @@ public class PatientSummary {
     private int age;
     private String mobile;
     private UUID patientId;
+    private String imageUrl;
 }

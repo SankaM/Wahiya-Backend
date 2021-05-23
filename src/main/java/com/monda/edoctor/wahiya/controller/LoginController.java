@@ -28,6 +28,8 @@ public class LoginController {
         return LoginResponse.builder().doctorId("EDR1")
                 .doctorName("Dr.David")
                 .userName(loginRequest.getUserName())
+                .location("Changi")
+                .imageUrl("https://wahiya-edoctor.s3.us-east-2.amazonaws.com/doctors/gettyimages-1139665870-612x612.jpeg")
                 .build();
     }
 }

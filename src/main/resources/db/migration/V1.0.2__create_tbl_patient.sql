@@ -8,5 +8,6 @@ CREATE TABLE wahiya.patient (
  birth_date date,
  health_profile varchar(250),
  mobile varchar(20),
- is_active boolean default true
+ is_active boolean default true,
+ image_url varchar(200)
 );

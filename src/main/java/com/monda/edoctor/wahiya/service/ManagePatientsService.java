@@ -23,6 +23,7 @@ public class ManagePatientsService {
         return patients.stream().map(p-> PatientSummary.builder()
                 .age(p.getAge()).name(p.getName()).mobile(p.getMobile())
                 .patientId(p.getPatientId())
+                .imageUrl("https://wahiya-edoctor.s3.us-east-2.amazonaws.com/patients/photo-patient.jpeg")
                 .build()).collect(Collectors.toList());
     }
 

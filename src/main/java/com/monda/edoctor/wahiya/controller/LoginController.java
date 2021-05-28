@@ -2,15 +2,13 @@ package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.LoginRequest;
 import com.monda.edoctor.wahiya.dto.LoginResponse;
-import com.monda.edoctor.wahiya.dto.PatientSummary;
 import com.monda.edoctor.wahiya.exception.LoginException;
-import com.monda.edoctor.wahiya.service.ManagePatientsService;
+import com.monda.edoctor.wahiya.model.DoctorEntity;
+import com.monda.edoctor.wahiya.service.DoctorEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,15 +16,21 @@ import java.util.List;
 @RequestMapping("/v1")
 public class LoginController {
 
+    @Autowired
+    private DoctorEntityService doctorEntityService;
+
+    @PostMapping(value = "/doctor")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void  addDoctor(@RequestBody DoctorEntity doctorEntity) {
+        doctorEntityService.addDoctor(doctorEntity);
+    }
+
     @PostMapping(value = "/doctor/login")
     @ResponseStatus(code = HttpStatus.OK)
-    public LoginResponse getPatientsSummaryOfDoctor(@RequestBody LoginRequest loginRequest) throws LoginException {
-        if(!(loginRequest.getUserName().equals("test1") &&
-                loginRequest.getPassword().equals("password1"))){
-            throw new LoginException();
-        }
-        return LoginResponse.builder().doctorId("EDR1")
-                .doctorName("Dr.David")
+    public LoginResponse login(@RequestBody LoginRequest loginRequest) throws LoginException {
+        DoctorEntity doctorEntity = doctorEntityService.validateLogin(loginRequest);
+        return LoginResponse.builder().doctorId(String.valueOf(doctorEntity.getDoctorId()))
+                .doctorName(doctorEntity.getName())
                 .userName(loginRequest.getUserName())
                 .build();
     }

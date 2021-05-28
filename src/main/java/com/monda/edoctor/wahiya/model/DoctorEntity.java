@@ -28,7 +28,7 @@ public class DoctorEntity {
     private Integer mobile;
 
     @Column(name="email")
-    private Integer email;
+    private String email;
 
     @Column(name="address_1")
     private String address1;

@@ -19,13 +19,6 @@ public class LoginController {
     @Autowired
     private DoctorEntityService doctorEntityService;
 
-    @PostMapping(value = "/doctor")
-    @ResponseStatus(code = HttpStatus.CREATED)
-    public void  addDoctor(@RequestBody DoctorEntity doctorEntity) {
-
-        doctorEntityService.addDoctor(doctorEntity);
-    }
-
     @PostMapping(value = "/doctor/login")
     @ResponseStatus(code = HttpStatus.OK)
     public LoginResponse login(@RequestBody LoginRequest loginRequest) throws LoginException {
@@ -33,8 +26,8 @@ public class LoginController {
         return LoginResponse.builder().doctorId(String.valueOf(doctorEntity.getDoctorId()))
                 .doctorName(doctorEntity.getName())
                 .userName(loginRequest.getUserName())
-                .location("Changi")
-                .imageUrl("https://wahiya-edoctor.s3.us-east-2.amazonaws.com/doctors/gettyimages-1139665870-612x612.jpeg")
+                .location(doctorEntity.getAddress3())
+                .imageUrl(doctorEntity.getImageLink())
                 .build();
     }
 }

@@ -1,16 +1,17 @@
 CREATE TABLE wahiya.doctor (
- id uuid primary key,
- doctor_id varchar(20),
+ doctor_id uuid primary key,
  name varchar(50),
  user_name varchar(20),
  password varchar(64),
  email varchar(40),
  location varchar(40),
- address varchar(150),
- postal_code varchar(20),
- mobile varchar(20),
+ address_1 varchar(150),
+ address_2 varchar(150),
+ address_3 varchar(150),
+ zip_code varchar(20),
+ mobile_number varchar(20),
  is_active boolean default true,
  profile varchar(300),
  tags varchar(200),
- image_url varchar(200)
+ image_link varchar(200)
 );

@@ -22,6 +22,7 @@ public class LoginController {
     @PostMapping(value = "/doctor")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void  addDoctor(@RequestBody DoctorEntity doctorEntity) {
+
         doctorEntityService.addDoctor(doctorEntity);
     }
 

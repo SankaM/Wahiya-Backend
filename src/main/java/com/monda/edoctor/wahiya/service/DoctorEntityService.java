@@ -25,11 +25,13 @@ public class DoctorEntityService {
         if(passwordEncoder.matches(loginRequest.getPassword(), doctorEntity.getPassword())){
             return doctorEntity;
         }
+
         throw new LoginException();
     }
 
     public void addDoctor(DoctorEntity doctorEntity) {
         doctorEntity.setPassword(passwordEncoder.encode(doctorEntity.getPassword()));
         doctorEntityRepository.save(doctorEntity);
+
     }
 }

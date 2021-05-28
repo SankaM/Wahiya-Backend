@@ -11,4 +11,5 @@ public interface DoctorEntityRepository extends JpaRepository<DoctorEntity, UUID
 
     Optional<DoctorEntity> findByUserName(String userName);
 
+
 }

@@ -24,7 +24,7 @@ public class ManagePatientsController {
     // Issue prescription API
     @GetMapping(value = "/doctors/{doctorId}/patients/summary")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PatientSummary> getPatientsSummaryOfDoctor(@PathVariable("doctorId") String doctorId) {
+    public List<PatientSummary> getPatientsSummaryOfDoctor(@PathVariable("doctorId") UUID doctorId) {
         return managePatientsService.getPatientsSummaryOfDoctor(doctorId);
     }
 
@@ -37,7 +37,7 @@ public class ManagePatientsController {
 
     @PostMapping(value = "/doctors/{doctorId}/patients/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void registerPatient(@PathVariable("doctorId") String doctorId,
+    public void registerPatient(@PathVariable("doctorId") UUID doctorId,
                                 @RequestBody RegisterPatientRequest registerPatientRequest) {
         managePatientsService.registerPatient(registerPatientRequest, doctorId);
     }

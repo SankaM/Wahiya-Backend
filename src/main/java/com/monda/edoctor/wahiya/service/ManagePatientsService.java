@@ -18,7 +18,7 @@ public class ManagePatientsService {
     @Autowired
     private PatientEntityRepository patientEntityRepository;
 
-    public List<PatientSummary> getPatientsSummaryOfDoctor(String doctorId){
+    public List<PatientSummary> getPatientsSummaryOfDoctor(UUID doctorId){
         List<PatientEntity> patients = patientEntityRepository.findByDoctorIdAndIsActive(doctorId, true);
         return patients.stream().map(p-> PatientSummary.builder()
                 .age(p.getAge()).name(p.getName()).mobile(p.getMobile())
@@ -27,7 +27,7 @@ public class ManagePatientsService {
                 .build()).collect(Collectors.toList());
     }
 
-    public void registerPatient(RegisterPatientRequest registerPatientRequest, String doctorId){
+    public void registerPatient(RegisterPatientRequest registerPatientRequest, UUID doctorId){
         patientEntityRepository.save(PatientEntity.builder().age(registerPatientRequest.getAge())
                 .birthDate(registerPatientRequest.getBirthDate()).mobile(registerPatientRequest.getMobile())
                 .email(registerPatientRequest.getEmail()).name(registerPatientRequest.getName())

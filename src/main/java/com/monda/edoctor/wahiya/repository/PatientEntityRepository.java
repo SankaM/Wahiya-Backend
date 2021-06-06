@@ -15,7 +15,7 @@ public interface PatientEntityRepository extends JpaRepository<PatientEntity, UU
 
     void deleteByPatientId(UUID patientId);
 
-    List<PatientEntity> findByDoctorIdAndIsActive(String doctorId, Boolean isActive);
+    List<PatientEntity> findByDoctorIdAndIsActive(UUID doctorId, Boolean isActive);
 
     PatientEntity findByDoctorIdAndPatientId(String doctorId, UUID patientId);
 }

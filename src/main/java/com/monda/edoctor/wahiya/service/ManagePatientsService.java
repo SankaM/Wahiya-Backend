@@ -7,6 +7,7 @@ import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.PatientNotFoundException;
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.repository.PatientEntityRepository;
+import com.monda.edoctor.wahiya.repository.specification.PatientSpecification;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,5 +87,14 @@ public class ManagePatientsService {
         }
         logger.error("Patient: {} not  assigned to Doctor: {}", patientId, doctorId);
         throw new NoContentException("Patient not assign to doctor");
+    }
+
+    public List<PatientEntity> searchPatient(String query) {
+        List<PatientEntity> patients = patientEntityRepository.findAll(PatientSpecification.textInAllColumns(query));
+        if(patients.isEmpty()){
+            logger.debug("No patient available for: {}", query);
+            throw new NoContentException("No patient available for: " + query);
+        }
+        return patients;
     }
 }

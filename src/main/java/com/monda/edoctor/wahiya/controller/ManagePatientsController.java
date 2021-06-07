@@ -53,4 +53,10 @@ public class ManagePatientsController {
         managePatientsService.inactivePatient(doctorId, patientId);
     }
 
+    @GetMapping(value = "/patients/search")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<PatientEntity> searchPatient(@RequestParam("query") String query){
+        return managePatientsService.searchPatient(query);
+    }
+
 }

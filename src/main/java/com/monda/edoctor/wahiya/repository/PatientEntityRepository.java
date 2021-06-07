@@ -2,6 +2,7 @@ package com.monda.edoctor.wahiya.repository;
 
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.UUID;
  *
  * @author Priyantha Weerakoon
  */
-public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID> {
+public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID>, JpaSpecificationExecutor {
 
     void deleteByPatientId(UUID patientId);
 

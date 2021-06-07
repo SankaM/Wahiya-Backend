@@ -129,7 +129,7 @@
 			"name": "Search Patient",
 			"request": {
 				"url": {
-					"raw": "{{wahiya_url}}/v1/patients/search?query=sachini",
+					"raw": "{{wahiya_url}}/v1/patients/search?query=1992-05-14",
 					"host": [
 						"{{wahiya_url}}"
 					],
@@ -141,7 +141,7 @@
 					"query": [
 						{
 							"key": "query",
-							"value": "sachini",
+							"value": "1992-05-14",
 							"equals": true,
 							"description": ""
 						}

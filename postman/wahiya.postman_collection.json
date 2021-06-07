@@ -102,6 +102,58 @@
 				"description": ""
 			},
 			"response": []
+		},
+		{
+			"name": "Get Patient Summery By Doctor",
+			"request": {
+				"url": "{{wahiya_url}}/v1/doctors/{{doctorId}}/patients/summary",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Inactive Patient",
+			"request": {
+				"url": "{{wahiya_url}}/v1//doctors/{doctorId}/patients/{patientId}/inactive",
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Patient",
+			"request": {
+				"url": {
+					"raw": "{{wahiya_url}}/v1/patients/search?query=sachini",
+					"host": [
+						"{{wahiya_url}}"
+					],
+					"path": [
+						"v1",
+						"patients",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "sachini",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

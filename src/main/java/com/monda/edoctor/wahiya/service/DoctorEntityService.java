@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Setter
 public class DoctorEntityService {
@@ -25,13 +27,18 @@ public class DoctorEntityService {
         if(passwordEncoder.matches(loginRequest.getPassword(), doctorEntity.getPassword())){
             return doctorEntity;
         }
-
         throw new LoginException();
     }
 
     public void addDoctor(DoctorEntity doctorEntity) {
-        doctorEntity.setPassword(passwordEncoder.encode(doctorEntity.getPassword()));
-        doctorEntityRepository.save(doctorEntity);
-
+        //For dummy purpose doctor id randomly generated
+        UUID uuid = UUID.randomUUID();
+        if(doctorEntityRepository.findById(uuid).isPresent()){
+            addDoctor(doctorEntity);
+        }else{
+            doctorEntity.setDoctorId(uuid);
+            doctorEntity.setPassword(passwordEncoder.encode(doctorEntity.getPassword()));
+            doctorEntityRepository.save(doctorEntity);
+        }
     }
 }

@@ -1,0 +1,107 @@
+{
+	"variables": [],
+	"info": {
+		"name": "wahiya",
+		"_postman_id": "af4159bb-1533-66fa-d23c-7ea67cad1a03",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"url": "{{wahiya_url}}/v1/doctor/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userName\": \"sachini410\",\n    \"password\": \"123456789\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get patients summary of doctor",
+			"request": {
+				"url": "{{wahiya_url}}/v1/doctors/EDR1/patients/summary",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get patient's basic details",
+			"request": {
+				"url": "localhost:3005/v1/doctors/EDR1/patients/f8edc42e-4b6f-4298-be7d-9024621a70cb/details",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Inactive a patient",
+			"request": {
+				"url": "{{wahiya_url}}/v1/doctors/EDR1/patients/f8edc42e-4b6f-4298-be7d-9024621a70cb/inactive",
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Register a patient by doctor",
+			"request": {
+				"url": "{{wahiya_url}}/v1/doctors/EDR1/patients/register",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Awesome\",\n    \"age\": 35,\n    \"mobile\": \"071111111\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add Doctor",
+			"request": {
+				"url": "{{wahiya_url}}/v1/doctor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"doctorId\" : \"f3560a74-bfa8-11eb-8529-0242ac130003\",\n\t\"name\" : \"Sachini\",\n\t\"userName\" : \"sachini410\",\n\t\"mobile\" : \"123456789\",\n\t\"email\" : \"12345\",\n\t\"password\" : \"123456789\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

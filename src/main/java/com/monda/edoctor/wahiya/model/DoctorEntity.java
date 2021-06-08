@@ -21,11 +21,14 @@ public class DoctorEntity {
     @Column(name="name")
     private String name;
 
+    @Column(name="user_name")
+    private String userName;
+
     @Column(name="mobile_number")
     private Integer mobile;
 
     @Column(name="email")
-    private Integer email;
+    private String email;
 
     @Column(name="address_1")
     private String address1;
@@ -44,5 +47,8 @@ public class DoctorEntity {
 
     @Column(name="is_active")
     private Boolean isActive;
+
+    @Column(name="password")
+    private String password;
 
 }

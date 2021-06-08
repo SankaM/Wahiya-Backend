@@ -42,7 +42,7 @@ public class PatientEntity {
     private String healthProfile;
 
     @Column(name="doctor_id")
-    private String doctorId;
+    private UUID doctorId;
 
     @Column(name="is_active")
     private Boolean isActive;

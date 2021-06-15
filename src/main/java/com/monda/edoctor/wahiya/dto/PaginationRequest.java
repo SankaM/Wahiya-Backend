@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
-    private String userName;
-    private String password;
+public class PaginationRequest {
+    int page = 0;
+    int limit = 10;
 }

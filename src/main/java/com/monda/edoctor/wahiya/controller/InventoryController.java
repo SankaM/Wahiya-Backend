@@ -1,11 +1,14 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.PatientSummary;
-import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
+import com.monda.edoctor.wahiya.dto.*;
+import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
+import com.monda.edoctor.wahiya.model.DrugEntity;
 import com.monda.edoctor.wahiya.model.PatientEntity;
+import com.monda.edoctor.wahiya.service.DrugEntityService;
 import com.monda.edoctor.wahiya.service.ManagePatientsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,31 @@ import java.util.UUID;
 public class InventoryController {
 
     @Autowired
-    public ManagePatientsService managePatientsService;
-// Doctor Interface to manage inventory
-    // Get inventory summary by pages, expires soon first by default
+    public DrugEntityService drugEntityService;
+
+    @PostMapping(value = "/inventory/drug/register")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void registerDrug(@RequestBody RegisterDrugRequest registerDrugRequest) {
+        drugEntityService.registerDrug(registerDrugRequest);
+    }
+
+
+    @PutMapping(value = "/inventory/drug/{drugId}/update")
+    @ResponseStatus(code = HttpStatus.OK)
+    public void updateDrug(@PathVariable("drugId") UUID drugId,
+                           @RequestBody UpdateDrugRequest updateDrugRequest) throws DrugNotFoundException {
+        drugEntityService.updateDrugInventory(updateDrugRequest, drugId);
+    }
+
+    @GetMapping(value = "/inventory/search")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<DrugEntity> search(@RequestParam("query") String query) {
+        return drugEntityService.searchDrug(query);
+    }
+
+    @GetMapping(value = "/inventory/drugs")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Page<DrugEntity> getDrugsWithPagination(PaginationRequest paginationRequest) {
+        return drugEntityService.getAllDrugsWithPagination(paginationRequest);
+    }
 }

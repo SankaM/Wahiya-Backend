@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Setter
+
 public class ManagePatientsService {
 
     private static final Logger logger = LoggerFactory.getLogger(ManagePatientsService.class);

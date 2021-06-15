@@ -1,0 +1,2 @@
+insert into wahiya.drug values
+('a1e61b80-094b-4663-98d8-bf97af18462d','Test 01', 'aSASD SD ASD SDASD','2022-05-14', 10,'ml', 100.00, null, true);

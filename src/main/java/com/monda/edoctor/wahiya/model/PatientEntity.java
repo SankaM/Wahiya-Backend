@@ -17,34 +17,34 @@ public class PatientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="patient_id")
+    @Column(name = "patient_id")
     private UUID patientId;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="age")
+    @Column(name = "age")
     private Integer age;
 
-    @Column(name="user_name")
+    @Column(name = "user_name")
     private String userName;
 
-    @Column(name="birth_date")
+    @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="mobile")
+    @Column(name = "mobile")
     private String mobile;
 
-    @Column(name="health_profile")
+    @Column(name = "health_profile")
     private String healthProfile;
 
-    @Column(name="doctor_id")
+    @Column(name = "doctor_id")
     private UUID doctorId;
 
-    @Column(name="is_active")
+    @Column(name = "is_active")
     private Boolean isActive;
 
     private String imageUrl;

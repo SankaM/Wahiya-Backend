@@ -13,7 +13,7 @@ import java.util.UUID;
  *
  * @author Priyantha Weerakoon
  */
-public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID>, JpaSpecificationExecutor {
+public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID>, JpaSpecificationExecutor    {
 
     void deleteByPatientId(UUID patientId);
 

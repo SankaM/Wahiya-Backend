@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.dto.DoctorResponse;
 import com.monda.edoctor.wahiya.dto.LoginRequest;
 import com.monda.edoctor.wahiya.exception.DoctorNotFoundException;
 import com.monda.edoctor.wahiya.exception.LoginException;
@@ -9,11 +10,9 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
 import java.util.UUID;
 
 @Service
@@ -34,6 +33,11 @@ public class DoctorEntityService {
             throw new DoctorNotFoundException();
         }
         return true;
+    }
+
+    public DoctorResponse getDoctorResponse(UUID id) {
+        DoctorEntity doctorEntity = doctorEntityRepository.findById(id).get();
+        return DoctorResponse.builder().id(doctorEntity.getDoctorId().toString()).imageURL(doctorEntity.getImageLink()).name(doctorEntity.getName()).build();
     }
 
     public DoctorEntity validateLogin(LoginRequest loginRequest) throws LoginException {

@@ -1,15 +1,14 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.dto.DrugResponse;
 import com.monda.edoctor.wahiya.dto.PaginationRequest;
 import com.monda.edoctor.wahiya.dto.RegisterDrugRequest;
 import com.monda.edoctor.wahiya.dto.UpdateDrugRequest;
 import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.model.DrugEntity;
-import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.repository.DrugEntityRepository;
 import com.monda.edoctor.wahiya.repository.specification.DrugSpecification;
-import com.monda.edoctor.wahiya.repository.specification.PatientSpecification;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,19 @@ public class DrugEntityService {
             throw new DrugNotFoundException();
         }
         return true;
+    }
+
+    public DrugResponse getDrugResponse(UUID id) {
+        DrugEntity drugEntity = drugEntityRepository.findById(id).get();
+
+        return DrugResponse.builder()
+                .description(drugEntity.getDescription())
+                .expiryDate(drugEntity.getExpiryDate())
+                .imageUrl(drugEntity.getImageLink())
+                .name(drugEntity.getName())
+                .unit(drugEntity.getUnit())
+                .unitPrice(drugEntity.getUnitPrice())
+                .build();
     }
 
     public void registerDrug(RegisterDrugRequest registerDrugRequest) {

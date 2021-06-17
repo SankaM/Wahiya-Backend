@@ -1,11 +1,11 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.*;
+import com.monda.edoctor.wahiya.dto.PaginationRequest;
+import com.monda.edoctor.wahiya.dto.RegisterDrugRequest;
+import com.monda.edoctor.wahiya.dto.UpdateDrugRequest;
 import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
 import com.monda.edoctor.wahiya.model.DrugEntity;
-import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.service.DrugEntityService;
-import com.monda.edoctor.wahiya.service.ManagePatientsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

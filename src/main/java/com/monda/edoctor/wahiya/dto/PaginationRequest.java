@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaginationRequest {
-    int page = 0;
-    int limit = 10;
+    private Integer page = 0;
+    private Integer limit = 10;
 }

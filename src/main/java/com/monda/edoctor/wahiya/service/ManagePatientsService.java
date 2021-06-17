@@ -1,12 +1,16 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.PatientSummary;
-import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
+import com.monda.edoctor.wahiya.dto.*;
 import com.monda.edoctor.wahiya.exception.DoctorNotFoundException;
+import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.PatientNotFoundException;
+import com.monda.edoctor.wahiya.model.DoseEntity;
 import com.monda.edoctor.wahiya.model.PatientEntity;
+import com.monda.edoctor.wahiya.model.PrescriptionEntity;
+import com.monda.edoctor.wahiya.repository.DoseEntityRepository;
 import com.monda.edoctor.wahiya.repository.PatientEntityRepository;
+import com.monda.edoctor.wahiya.repository.PrescriptionEntityRepository;
 import com.monda.edoctor.wahiya.repository.specification.PatientSpecification;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -14,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +36,15 @@ public class ManagePatientsService {
 
     @Autowired
     private PatientEntityRepository patientEntityRepository;
+
+    @Autowired
+    private PrescriptionEntityRepository prescriptionEntityRepository;
+
+    @Autowired
+    private DrugEntityService drugEntityService;
+
+    @Autowired
+    private DoseEntityRepository doseEntityRepository;
 
     public boolean existsById(UUID id) throws PatientNotFoundException {
         if (!patientEntityRepository.existsById(id)) {
@@ -97,5 +111,67 @@ public class ManagePatientsService {
             throw new NoContentException("No patient available for: " + query);
         }
         return patients;
+    }
+
+    public void addPrescription(UUID doctorId, UUID patientId, PrescriptionRequest prescriptionRequest) throws DoctorNotFoundException, PatientNotFoundException, DrugNotFoundException {
+        if (doctorEntityService.existsById(doctorId) && existsById(patientId)) {
+            PrescriptionEntity prescriptionEntity = prescriptionEntityRepository.save(PrescriptionEntity.builder()
+                    .doctorId(doctorId)
+                    .patientId(patientId)
+                    .issuedDate(LocalDateTime.now()).build());
+
+            for (DoseEntityRequest doseEntityRequest: prescriptionRequest.getDoses()) {
+                if(drugEntityService.existsById(doseEntityRequest.getDrugId())){
+                    doseEntityRepository.save(DoseEntity.builder()
+                            .prescriptionId(prescriptionEntity.getPrescriptionId())
+                            .unitsPerDose(doseEntityRequest.getUnitsPerDose())
+                            .dosesPerDay(doseEntityRequest.getDosesPerDay())
+                            .numberOfDays(doseEntityRequest.getNumberOfDays())
+                            .beforeAfterMeal(doseEntityRequest.getBeforeAfterMeal())
+                            .note(doseEntityRequest.getNote())
+                            .fromDate(doseEntityRequest.getFromDate())
+                            .toDate(doseEntityRequest.getToDate())
+                            .drugId(doseEntityRequest.getDrugId())
+                            .build());
+                }
+            }
+        }
+    }
+
+    public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws PatientNotFoundException{
+        PatientResponse patientResponse = null;
+        List<PrescriptionResponse> prescriptionResponses = null;
+        if(existsById(patientId)){
+
+            List<PrescriptionEntity> prescriptions = prescriptionEntityRepository.findByPatientId(patientId);
+            if(prescriptions.isEmpty()){
+                logger.debug("No history available for: {}", patientId );
+                throw new NoContentException("No patient available for: " + patientId);
+            }
+
+            PatientEntity patientEntity = patientEntityRepository.findById(patientId).get();
+            patientResponse = PatientResponse.builder().id(patientEntity.getPatientId().toString()).name(patientEntity.getName()).imageURL(patientEntity.getImageUrl()).build();
+            prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
+                    .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
+                    .id(p.getPrescriptionId())
+                    .issuedDate(p.getIssuedDate())
+                    .doses(getDoseResponses(p.getPrescriptionId()))
+                    .build()).collect(Collectors.toList());
+        }
+        return MedicalHistoryResponse.builder().patient(patientResponse).prescriptions(prescriptionResponses).build();
+    }
+
+    private List<DoseResponse> getDoseResponses(UUID prescriptionId){
+        List<DoseEntity> doses = doseEntityRepository.findByPrescriptionId(prescriptionId);
+        return doses.stream().map(p -> DoseResponse.builder()
+                .unitsPerDose(p.getUnitsPerDose())
+                .beforeAfterMeal(p.getBeforeAfterMeal())
+                .dosesPerDay(p.getDosesPerDay())
+                .drug(drugEntityService.getDrugResponse(p.getDrugId()))
+                .note(p.getNote())
+                .numberOfDays(p.getNumberOfDays())
+                .fromDate(p.getFromDate())
+                .toDate(p.getToDate())
+                .build()).collect(Collectors.toList());
     }
 }

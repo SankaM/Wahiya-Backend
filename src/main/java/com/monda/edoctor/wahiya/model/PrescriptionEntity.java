@@ -21,10 +21,10 @@ public class PrescriptionEntity {
     private UUID prescriptionId;
 
     @Column(name = "doctor_id")
-    private String doctorId;
+    private UUID doctorId;
 
     @Column(name = "patient_id")
-    private Integer patientId;
+    private UUID patientId;
 
     @Column(name = "issued_date")
     private LocalDateTime issuedDate;

@@ -1,8 +1,11 @@
 package com.monda.edoctor.wahiya.controller;
 
+import com.monda.edoctor.wahiya.dto.MedicalHistoryResponse;
+import com.monda.edoctor.wahiya.dto.PrescriptionRequest;
 import com.monda.edoctor.wahiya.dto.PatientSummary;
 import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
 import com.monda.edoctor.wahiya.exception.DoctorNotFoundException;
+import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
 import com.monda.edoctor.wahiya.exception.PatientNotFoundException;
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.service.ManagePatientsService;
@@ -57,6 +60,20 @@ public class ManagePatientsController {
     @ResponseStatus(code = HttpStatus.OK)
     public List<PatientEntity> searchPatient(@RequestParam("query") String query){
         return managePatientsService.searchPatient(query);
+    }
+
+    @PostMapping(value = "/doctors/{doctorId}/patients/{patientId}/prescription")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void addPrescription(@PathVariable("doctorId") UUID doctorId,
+                                @PathVariable("patientId") UUID patientId,
+                                @RequestBody PrescriptionRequest prescriptionRequest) throws DoctorNotFoundException, PatientNotFoundException, DrugNotFoundException {
+        managePatientsService.addPrescription(doctorId, patientId, prescriptionRequest);
+    }
+
+    @GetMapping(value = "/patients/{patientId}/history")
+    @ResponseStatus(code = HttpStatus.OK)
+    public MedicalHistoryResponse getPatientMedicalHistory(@PathVariable("patientId") UUID patientId) throws PatientNotFoundException {
+        return managePatientsService.getPatientMedicalHistory(patientId);
     }
 
 }

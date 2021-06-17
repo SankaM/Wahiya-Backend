@@ -54,6 +54,11 @@ public class ManagePatientsService {
         return true;
     }
 
+    public PatientResponse getPatientResponse(UUID id) {
+        PatientEntity patientEntity = patientEntityRepository.findById(id).get();
+        return PatientResponse.builder().id(patientEntity.getPatientId().toString()).name(patientEntity.getName()).imageURL(patientEntity.getImageUrl()).build();
+    }
+
     public List<PatientSummary> getPatientsSummaryOfDoctor(UUID doctorId) throws DoctorNotFoundException {
         if (doctorEntityService.existsById(doctorId)) {
             List<PatientEntity> patients = patientEntityRepository.findByDoctorIdAndIsActive(doctorId, true);
@@ -106,7 +111,7 @@ public class ManagePatientsService {
 
     public List<PatientEntity> searchPatient(String query) {
         List<PatientEntity> patients = patientEntityRepository.findAll(PatientSpecification.textInAllColumns(query));
-        if(patients.isEmpty()){
+        if (patients.isEmpty()) {
             logger.debug("No patient available for: {}", query);
             throw new NoContentException("No patient available for: " + query);
         }
@@ -120,8 +125,8 @@ public class ManagePatientsService {
                     .patientId(patientId)
                     .issuedDate(LocalDateTime.now()).build());
 
-            for (DoseEntityRequest doseEntityRequest: prescriptionRequest.getDoses()) {
-                if(drugEntityService.existsById(doseEntityRequest.getDrugId())){
+            for (DoseEntityRequest doseEntityRequest : prescriptionRequest.getDoses()) {
+                if (drugEntityService.existsById(doseEntityRequest.getDrugId())) {
                     doseEntityRepository.save(DoseEntity.builder()
                             .prescriptionId(prescriptionEntity.getPrescriptionId())
                             .unitsPerDose(doseEntityRequest.getUnitsPerDose())
@@ -138,19 +143,14 @@ public class ManagePatientsService {
         }
     }
 
-    public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws PatientNotFoundException{
-        PatientResponse patientResponse = null;
+    public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws PatientNotFoundException {
         List<PrescriptionResponse> prescriptionResponses = null;
-        if(existsById(patientId)){
-
+        if (existsById(patientId)) {
             List<PrescriptionEntity> prescriptions = prescriptionEntityRepository.findByPatientId(patientId);
-            if(prescriptions.isEmpty()){
-                logger.debug("No history available for: {}", patientId );
+            if (prescriptions.isEmpty()) {
+                logger.debug("No history available for: {}", patientId);
                 throw new NoContentException("No patient available for: " + patientId);
             }
-
-            PatientEntity patientEntity = patientEntityRepository.findById(patientId).get();
-            patientResponse = PatientResponse.builder().id(patientEntity.getPatientId().toString()).name(patientEntity.getName()).imageURL(patientEntity.getImageUrl()).build();
             prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
                     .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
                     .id(p.getPrescriptionId())
@@ -158,10 +158,10 @@ public class ManagePatientsService {
                     .doses(getDoseResponses(p.getPrescriptionId()))
                     .build()).collect(Collectors.toList());
         }
-        return MedicalHistoryResponse.builder().patient(patientResponse).prescriptions(prescriptionResponses).build();
+        return MedicalHistoryResponse.builder().patient(getPatientResponse(patientId)).prescriptions(prescriptionResponses).build();
     }
 
-    private List<DoseResponse> getDoseResponses(UUID prescriptionId){
+    private List<DoseResponse> getDoseResponses(UUID prescriptionId) {
         List<DoseEntity> doses = doseEntityRepository.findByPrescriptionId(prescriptionId);
         return doses.stream().map(p -> DoseResponse.builder()
                 .unitsPerDose(p.getUnitsPerDose())
@@ -173,5 +173,17 @@ public class ManagePatientsService {
                 .fromDate(p.getFromDate())
                 .toDate(p.getToDate())
                 .build()).collect(Collectors.toList());
+    }
+
+    public InvoiceResponse getInvoice(UUID prescriptionId) {
+        PrescriptionEntity prescription = prescriptionEntityRepository.findById(prescriptionId).get();
+        PrescriptionResponse prescriptionResponse = PrescriptionResponse.builder()
+                .doctor(doctorEntityService.getDoctorResponse(prescription.getDoctorId()))
+                .id(prescription.getPrescriptionId())
+                .issuedDate(prescription.getIssuedDate())
+                .doses(getDoseResponses(prescription.getPrescriptionId()))
+                .build();
+        return InvoiceResponse.builder().prescription(prescriptionResponse)
+                .patient(getPatientResponse(prescription.getPatientId())).build();
     }
 }

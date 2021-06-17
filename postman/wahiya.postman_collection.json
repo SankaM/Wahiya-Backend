@@ -117,7 +117,7 @@
 		{
 			"name": "Inactive Patient",
 			"request": {
-				"url": "{{wahiya_url}}/v1//doctors/{doctorId}/patients/{patientId}/inactive",
+				"url": "{{wahiya_url}}/v1//doctors/{{doctorId}}/patients/{{patientId}}/inactive",
 				"method": "DELETE",
 				"header": [],
 				"body": {},
@@ -149,6 +149,126 @@
 					"variable": []
 				},
 				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Drug Register",
+			"request": {
+				"url": "{{wahiya_url}}/v1/inventory/drug/register",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\" : \"Test 01\",\n\t\"description\" : \"aSASD SD ASD SDASD\",\n\t\"unitPrice\" : \"100\",\n\t\"unit\" : \"ml\",\n\t\"expiryDate\" : \"2022-05-14\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Drug",
+			"request": {
+				"url": "{{wahiya_url}}/v1/inventory/drug/a1e61b80-094b-4663-98d8-bf97af18462d/update",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"unit\" : 40,\n\t\"updateType\" : \"SET\"\n}\n\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Drugs with pagination",
+			"request": {
+				"url": {
+					"raw": "{{wahiya_url}}/v1/inventory/drugs",
+					"host": [
+						"{{wahiya_url}}"
+					],
+					"path": [
+						"v1",
+						"inventory",
+						"drugs"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "10",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Add Prescription",
+			"request": {
+				"url": "{{wahiya_url}}/v1//doctors/{{doctorId}}/patients/{{patientId}}/prescription",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"doses\" : [\n\t\t{\n\t\t\t\"drugId\" : \"a1e61b80-094b-4663-98d8-bf97af18462d\",\n    \t\t\"unitsPerDose\" : \"2\",\n    \t\t\"dosesPerDay\" : \"3\",\n    \t\t\"numberOfDays\" : \"10\",\n    \t\t\"beforeAfterMeal\" : \"before\",\n    \t\t\"note\" : \"Note\",\n    \t\t\"fromDate\" : \"2022-05-14 12:00\",\n    \t\t\"toDate\" : \"2022-05-24 23:59\"\n\t\t},\n\t\t{\n\t\t\t\"drugId\" : \"a1e61b80-094b-4663-98d8-bf97af18462d\",\n    \t\t\"unitsPerDose\" : \"2\",\n    \t\t\"dosesPerDay\" : \"3\",\n    \t\t\"numberOfDays\" : \"10\",\n    \t\t\"beforeAfterMeal\" : \"before\",\n    \t\t\"note\" : \"Note\",\n    \t\t\"fromDate\" : \"2022-05-14 12:00\",\n    \t\t\"toDate\" : \"2022-05-24 23:59\"\n\t\t}\n\t]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Medical History",
+			"request": {
+				"url": "{{wahiya_url}}/v1/patients/{{patientId}}/history",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Invoice",
+			"request": {
+				"url": "{{wahiya_url}}/v1/prescription/8b569fab-c413-417d-ab35-6fcc147ffc9d/invoice",
+				"method": "POST",
 				"header": [],
 				"body": {},
 				"description": ""

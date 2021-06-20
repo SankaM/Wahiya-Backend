@@ -4,8 +4,9 @@ import com.monda.edoctor.wahiya.dto.DrugResponse;
 import com.monda.edoctor.wahiya.dto.PaginationRequest;
 import com.monda.edoctor.wahiya.dto.RegisterDrugRequest;
 import com.monda.edoctor.wahiya.dto.UpdateDrugRequest;
-import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
+import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
+import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DrugEntity;
 import com.monda.edoctor.wahiya.repository.DrugEntityRepository;
 import com.monda.edoctor.wahiya.repository.specification.DrugSpecification;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,18 +32,28 @@ public class DrugEntityService {
     @Autowired
     private DrugEntityRepository drugEntityRepository;
 
-    public boolean existsById(UUID id) throws DrugNotFoundException {
+    public boolean existsById(UUID id) throws NotFoundException {
         if (!drugEntityRepository.existsById(id)) {
             logger.error("Drug ID not available : {}", id);
-            throw new DrugNotFoundException();
+            throw new NotFoundException("Requested drug ID not available");
         }
         return true;
+    }
+
+    public DrugEntity save(DrugEntity drugEntity) throws DuplicateContentException {
+        try {
+            return drugEntityRepository.saveAndFlush(drugEntity);
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Duplicate Record : {}", e.getMessage());
+            throw new DuplicateContentException("Drug already available :" + drugEntity.getName());
+        }
     }
 
     public DrugResponse getDrugResponse(UUID id) {
         DrugEntity drugEntity = drugEntityRepository.findById(id).get();
 
         return DrugResponse.builder()
+                .id(drugEntity.getId())
                 .description(drugEntity.getDescription())
                 .expiryDate(drugEntity.getExpiryDate())
                 .imageUrl(drugEntity.getImageLink())
@@ -52,7 +64,7 @@ public class DrugEntityService {
     }
 
     public void registerDrug(RegisterDrugRequest registerDrugRequest) {
-        DrugEntity drugEntity = drugEntityRepository.save(DrugEntity.builder()
+        DrugEntity drugEntity = save(DrugEntity.builder()
                 .name(registerDrugRequest.getName())
                 .availableUnits(registerDrugRequest.getAvailableUnits() == null ? 0 : registerDrugRequest.getAvailableUnits())
                 .description(registerDrugRequest.getDescription())
@@ -61,10 +73,10 @@ public class DrugEntityService {
                 .unitPrice(registerDrugRequest.getUnitPrice() == null ? 0 : registerDrugRequest.getUnitPrice())
                 .imageLink(registerDrugRequest.getImageUrl())
                 .isAvailable(true).build());
-        logger.debug("Drug added successfully ID: {} Name: {}", drugEntity.getDrugId(), drugEntity.getName());
+        logger.debug("Drug added successfully ID: {} Name: {}", drugEntity.getId(), drugEntity.getName());
     }
 
-    public void updateDrugInventory(UpdateDrugRequest updateDrugRequest, UUID drugId) throws DrugNotFoundException {
+    public void updateDrugInventory(UpdateDrugRequest updateDrugRequest, UUID drugId) throws NotFoundException {
         if (existsById(drugId)) {
             DrugEntity drugEntity = drugEntityRepository.findById(drugId).get();
             switch (updateDrugRequest.getUpdateType()) {
@@ -90,7 +102,7 @@ public class DrugEntityService {
 
     public List<DrugEntity> searchDrug(String query) {
         List<DrugEntity> drugs = drugEntityRepository.findAll(DrugSpecification.textInAllColumns(query));
-        if(drugs.isEmpty()){
+        if (drugs.isEmpty()) {
             logger.debug("No Drugs available for: {}", query);
             throw new NoContentException("No drugs available for: " + query);
         }
@@ -100,7 +112,7 @@ public class DrugEntityService {
     public Page<DrugEntity> getAllDrugsWithPagination(PaginationRequest paginationRequest) {
         PageRequest page = PageRequest.of(paginationRequest.getPage(), paginationRequest.getLimit());
         Page<DrugEntity> drugs = drugEntityRepository.findAll(page);
-        if(drugs.isEmpty()){
+        if (drugs.isEmpty()) {
             logger.debug("No Drugs available for");
             throw new NoContentException("No drugs available");
         }

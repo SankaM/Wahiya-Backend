@@ -3,7 +3,7 @@ package com.monda.edoctor.wahiya.controller;
 import com.monda.edoctor.wahiya.dto.PaginationRequest;
 import com.monda.edoctor.wahiya.dto.RegisterDrugRequest;
 import com.monda.edoctor.wahiya.dto.UpdateDrugRequest;
-import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
+import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DrugEntity;
 import com.monda.edoctor.wahiya.service.DrugEntityService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class InventoryController {
     @PutMapping(value = "/inventory/drug/{drugId}/update")
     @ResponseStatus(code = HttpStatus.OK)
     public void updateDrug(@PathVariable("drugId") UUID drugId,
-                           @RequestBody UpdateDrugRequest updateDrugRequest) throws DrugNotFoundException {
+                           @RequestBody UpdateDrugRequest updateDrugRequest) throws NotFoundException {
         drugEntityService.updateDrugInventory(updateDrugRequest, drugId);
     }
 

@@ -1,5 +1,5 @@
 CREATE TABLE wahiya.dosage (
- dosage_id uuid PRIMARY KEY,
+ id uuid PRIMARY KEY,
  prescription_id uuid,
  drug_id uuid,
  note varchar(300),

@@ -1,11 +1,8 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.InvoiceResponse;
-import com.monda.edoctor.wahiya.dto.PrescriptionRequest;
-import com.monda.edoctor.wahiya.exception.DoctorNotFoundException;
-import com.monda.edoctor.wahiya.exception.DrugNotFoundException;
-import com.monda.edoctor.wahiya.exception.PatientNotFoundException;
-import com.monda.edoctor.wahiya.service.ManagePatientsService;
+import com.monda.edoctor.wahiya.exception.NotFoundException;
+import com.monda.edoctor.wahiya.service.PrescriptionEntityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +17,12 @@ import java.util.UUID;
 public class InvoiceController {
 
     @Autowired
-    public ManagePatientsService managePatientsService;
-
+    public PrescriptionEntityService prescriptionEntityService;
 
     @GetMapping(value = "/prescription/{prescriptionId}/invoice")
     @ResponseStatus(code = HttpStatus.OK)
-    public InvoiceResponse addPrescription(@PathVariable("prescriptionId") UUID prescriptionId) throws DoctorNotFoundException, PatientNotFoundException, DrugNotFoundException {
-        return managePatientsService.getInvoice(prescriptionId);
+    public InvoiceResponse addPrescription(@PathVariable("prescriptionId") UUID prescriptionId) throws NotFoundException {
+        return prescriptionEntityService.getInvoice(prescriptionId);
     }
 
 

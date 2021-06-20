@@ -18,19 +18,19 @@ import java.util.UUID;
 public class DoctorEntity {
 
     @Id
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String userName;
 
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_number" , unique = true)
     private Integer mobile;
 
-    @Column(name = "email")
+    @Column(name = "email" , unique = true)
     private String email;
 
     @Column(name = "address_1")

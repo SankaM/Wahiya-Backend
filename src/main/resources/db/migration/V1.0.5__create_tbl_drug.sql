@@ -1,6 +1,6 @@
 CREATE TABLE wahiya.drug (
- drug_id uuid PRIMARY KEY,
- name varchar(100),
+ id uuid PRIMARY KEY,
+ name varchar(100) UNIQUE,
  description varchar(250),
  expiry_date date,
  available_units double,

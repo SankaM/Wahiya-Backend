@@ -18,7 +18,7 @@ public class DoctorController {
 
     @PostMapping(value = "/doctor")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void  addDoctor(@RequestBody DoctorEntity doctorEntity) {
+    public void addDoctor(@RequestBody DoctorEntity doctorEntity) {
         doctorEntityService.addDoctor(doctorEntity);
     }
 }

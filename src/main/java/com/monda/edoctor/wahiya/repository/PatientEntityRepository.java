@@ -13,11 +13,9 @@ import java.util.UUID;
  *
  * @author Priyantha Weerakoon
  */
-public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID>, JpaSpecificationExecutor    {
-
-    void deleteByPatientId(UUID patientId);
+public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID>, JpaSpecificationExecutor {
 
     List<PatientEntity> findByDoctorIdAndIsActive(UUID doctorId, Boolean isActive);
 
-    Optional<PatientEntity> findByDoctorIdAndPatientId(UUID doctorId, UUID patientId);
+    Optional<PatientEntity> findByDoctorIdAndId(UUID doctorId, UUID patientId);
 }

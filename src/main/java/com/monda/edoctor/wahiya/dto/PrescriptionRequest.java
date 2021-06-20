@@ -3,6 +3,7 @@ package com.monda.edoctor.wahiya.dto;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -10,5 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrescriptionRequest {
+    private UUID id;
     private List<DoseEntityRequest> doses;
 }

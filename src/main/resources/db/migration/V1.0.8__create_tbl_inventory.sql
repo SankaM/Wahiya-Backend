@@ -1,5 +1,5 @@
 CREATE TABLE wahiya.inventory (
- inventory_id uuid PRIMARY KEY,
+ id uuid PRIMARY KEY,
  doctor_id uuid,
  drug_id uuid,
  units_available double,

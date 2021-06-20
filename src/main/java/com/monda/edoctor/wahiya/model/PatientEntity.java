@@ -17,8 +17,8 @@ public class PatientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "patient_id")
-    private UUID patientId;
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "name")
     private String name;
@@ -26,16 +26,16 @@ public class PatientEntity {
     @Column(name = "age")
     private Integer age;
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String userName;
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "mobile")
+    @Column(name = "mobile", unique = true)
     private String mobile;
 
     @Column(name = "health_profile")

@@ -3,6 +3,7 @@ package com.monda.edoctor.wahiya.dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DrugResponse {
+    private UUID id;
     private String name;
     private String description;
     private LocalDate expiryDate;

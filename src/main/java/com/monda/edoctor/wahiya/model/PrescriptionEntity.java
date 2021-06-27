@@ -2,7 +2,10 @@ package com.monda.edoctor.wahiya.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,15 +19,14 @@ import java.util.UUID;
 public class PrescriptionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "prescription_id")
-    private UUID prescriptionId;
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "doctor_id")
-    private String doctorId;
+    private UUID doctorId;
 
     @Column(name = "patient_id")
-    private Integer patientId;
+    private UUID patientId;
 
     @Column(name = "issued_date")
     private LocalDateTime issuedDate;

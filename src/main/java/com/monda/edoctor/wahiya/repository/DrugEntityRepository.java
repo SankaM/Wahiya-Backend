@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.UUID;
 
-public interface DrugEntityRepository extends JpaRepository<DrugEntity, UUID> , JpaSpecificationExecutor {
+public interface DrugEntityRepository extends JpaRepository<DrugEntity, UUID>, JpaSpecificationExecutor {
 }

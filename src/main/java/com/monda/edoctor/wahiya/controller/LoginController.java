@@ -23,7 +23,7 @@ public class LoginController {
     @ResponseStatus(code = HttpStatus.OK)
     public LoginResponse login(@RequestBody LoginRequest loginRequest) throws LoginException {
         DoctorEntity doctorEntity = doctorEntityService.validateLogin(loginRequest);
-        return LoginResponse.builder().doctorId(String.valueOf(doctorEntity.getDoctorId()))
+        return LoginResponse.builder().doctorId(String.valueOf(doctorEntity.getId()))
                 .doctorName(doctorEntity.getName())
                 .userName(loginRequest.getUserName())
                 .location(doctorEntity.getAddress3())

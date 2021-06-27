@@ -23,7 +23,7 @@ public class DoseEntity {
     private UUID prescriptionId;
 
     @Column(name = "name")
-    private String drugId;
+    private UUID drugId;
 
     @Column(name = "units_per_dose")
     private Integer unitsPerDose;

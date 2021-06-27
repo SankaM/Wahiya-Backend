@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,30 +19,30 @@ import java.util.UUID;
 public class DoseEntity {
 
     @Id
-    @Column(name="prescription_id")
+    @Column(name = "prescription_id")
     private UUID prescriptionId;
 
-    @Column(name="name")
-    private String drugId;
+    @Column(name = "name")
+    private UUID drugId;
 
-    @Column(name="units_per_dose")
+    @Column(name = "units_per_dose")
     private Integer unitsPerDose;
 
-    @Column(name="doses_per_day")
+    @Column(name = "doses_per_day")
     private Integer dosesPerDay;
 
-    @Column(name="number_of_days")
+    @Column(name = "number_of_days")
     private Integer numberOfDays;
 
-    @Column(name="before_after_meal")
+    @Column(name = "before_after_meal")
     private String beforeAfterMeal;
 
-    @Column(name="note")
+    @Column(name = "note")
     private String note;
 
-    @Column(name="fromDate")
+    @Column(name = "fromDate")
     private LocalDateTime fromDate;
 
-    @Column(name="toDate")
+    @Column(name = "toDate")
     private LocalDateTime toDate;
 }

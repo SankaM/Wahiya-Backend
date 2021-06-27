@@ -2,8 +2,6 @@ package com.monda.edoctor.wahiya.dto;
 
 import lombok.*;
 
-import java.util.UUID;
-
 @Setter
 @Getter
 @Builder

@@ -2,11 +2,7 @@ package com.monda.edoctor.wahiya.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.math.BigDecimal;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -20,31 +16,38 @@ import java.util.UUID;
 public class DrugEntity {
 
     @Id
-    @Column(name="drug_id")
-    private UUID drugId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private UUID id;
 
-    @Column(name="name")
+    @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="expiry_date")
+    @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
-    @Column(name="available_units")
+    @Column(name = "available_units")
     private Double availableUnits;
 
-    @Column(name="unit")
+    @Column(name = "unit")
     private String unit;
 
-    @Column(name="unit_price")
+    @Column(name = "unit_price")
     private Double unitPrice;
 
-    @Column(name="image_link")
+    @Column(name = "image_link")
     private String imageLink;
 
-    @Column(name="is_available")
+    @Column(name = "is_available")
     private Boolean isAvailable;
+
+    public enum UpdateType {
+        ADD,
+        SET,
+        DEDUCT
+    }
 
 }

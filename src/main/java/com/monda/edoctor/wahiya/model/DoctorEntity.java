@@ -2,7 +2,10 @@ package com.monda.edoctor.wahiya.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Table(name = "doctor", schema = "wahiya")
@@ -15,40 +18,40 @@ import java.util.UUID;
 public class DoctorEntity {
 
     @Id
-    @Column(name="doctor_id")
-    private UUID doctorId;
+    @Column(name = "id")
+    private UUID id;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="user_name")
+    @Column(name = "user_name", unique = true)
     private String userName;
 
-    @Column(name="mobile_number")
+    @Column(name = "mobile_number" , unique = true)
     private Integer mobile;
 
-    @Column(name="email")
+    @Column(name = "email" , unique = true)
     private String email;
 
-    @Column(name="address_1")
+    @Column(name = "address_1")
     private String address1;
 
-    @Column(name="address_2")
+    @Column(name = "address_2")
     private String address2;
 
-    @Column(name="address_3")
+    @Column(name = "address_3")
     private String address3;
 
-    @Column(name="zip_code")
+    @Column(name = "zip_code")
     private String zip_code;
 
-    @Column(name="image_link")
+    @Column(name = "image_link")
     private String imageLink;
 
-    @Column(name="is_active")
+    @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 
 }

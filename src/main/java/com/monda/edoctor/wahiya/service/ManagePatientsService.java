@@ -120,20 +120,26 @@ public class ManagePatientsService {
     }
 
     public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws NotFoundException {
+        MedicalHistoryResponse.MedicalHistoryResponseBuilder builder = MedicalHistoryResponse.builder().patient(getPatientResponse(patientId));
+
         List<PrescriptionResponse> prescriptionResponses = null;
         if (existsById(patientId)) {
             List<PrescriptionEntity> prescriptions = prescriptionEntityService.findByPatientId(patientId);
             if (prescriptions.isEmpty()) {
                 logger.debug("No history available for: {}", patientId);
-                throw new NoContentException("No patient available for: " + patientId);
+            } else {
+                logger.debug("Found history for: {}", patientId);
+                prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
+                        .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
+                        .id(p.getId())
+                        .issuedDate(p.getIssuedDate())
+                        .doses(doseEntityService.getDoseResponses(p.getId()))
+                        .build()).collect(Collectors.toList());
+
+                builder.prescriptions(prescriptionResponses);
             }
-            prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
-                    .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
-                    .id(p.getId())
-                    .issuedDate(p.getIssuedDate())
-                    .doses(doseEntityService.getDoseResponses(p.getId()))
-                    .build()).collect(Collectors.toList());
         }
-        return MedicalHistoryResponse.builder().patient(getPatientResponse(patientId)).prescriptions(prescriptionResponses).build();
+
+        return builder.build();
     }
 }

@@ -27,7 +27,7 @@ public class LoginController {
                 .doctorName(doctorEntity.getName())
                 .userName(loginRequest.getUserName())
                 .location(doctorEntity.getAddress3())
-                .imageUrl(doctorEntity.getImageLink())
+                .imageUrl(doctorEntity.getImageUrl())
                 .build();
     }
 }

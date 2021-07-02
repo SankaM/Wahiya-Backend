@@ -10,5 +10,4 @@ import lombok.*;
 @AllArgsConstructor
 public class UpdateDrugRequest {
     private Double unit;
-    private DrugEntity.UpdateType updateType;
 }

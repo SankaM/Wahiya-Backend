@@ -14,38 +14,48 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "doctor_id")
+    private UUID doctorId;
 
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "user_name", unique = true)
-    private String userName;
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "email", unique = true)
-    private String email;
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(name = "mobile", unique = true)
-    private String mobile;
-
+    @Column(name = "mobile_phone", unique = true)
+    private String mobilePhone;
+    
     @Column(name = "health_profile")
     private String healthProfile;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "user_name", unique = true)
+    private String userName;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "is_active")
     private Boolean isActive;
 
-    private String imageUrl;
+    @Column(name = "email", unique = true)
+    private String email;
 }

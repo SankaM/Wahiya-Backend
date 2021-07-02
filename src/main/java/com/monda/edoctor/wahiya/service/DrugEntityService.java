@@ -55,48 +55,48 @@ public class DrugEntityService {
         return DrugResponse.builder()
                 .id(drugEntity.getId())
                 .description(drugEntity.getDescription())
-                .expiryDate(drugEntity.getExpiryDate())
-                .imageUrl(drugEntity.getImageLink())
+//                .expiryDate(drugEntity.getExpiryDate())
+//                .imageUrl(drugEntity.getImageLink())
                 .name(drugEntity.getName())
-                .unit(drugEntity.getUnit())
-                .unitPrice(drugEntity.getUnitPrice())
+//                .unit(drugEntity.getUnit())
+//                .unitPrice(drugEntity.getUnitPrice())
                 .build();
     }
 
     public void registerDrug(RegisterDrugRequest registerDrugRequest) {
-        DrugEntity drugEntity = save(DrugEntity.builder()
-                .name(registerDrugRequest.getName())
-                .availableUnits(registerDrugRequest.getAvailableUnits() == null ? 0 : registerDrugRequest.getAvailableUnits())
-                .description(registerDrugRequest.getDescription())
-                .expiryDate(registerDrugRequest.getExpiryDate())
-                .unit(registerDrugRequest.getUnit())
-                .unitPrice(registerDrugRequest.getUnitPrice() == null ? 0 : registerDrugRequest.getUnitPrice())
-                .imageLink(registerDrugRequest.getImageUrl())
-                .isAvailable(true).build());
-        logger.debug("Drug added successfully ID: {} Name: {}", drugEntity.getId(), drugEntity.getName());
+//        DrugEntity drugEntity = save(DrugEntity.builder()
+//                .name(registerDrugRequest.getName())
+//                .availableUnits(registerDrugRequest.getAvailableUnits() == null ? 0 : registerDrugRequest.getAvailableUnits())
+//                .description(registerDrugRequest.getDescription())
+//                .expiryDate(registerDrugRequest.getExpiryDate())
+//                .unit(registerDrugRequest.getUnit())
+//                .unitPrice(registerDrugRequest.getUnitPrice() == null ? 0 : registerDrugRequest.getUnitPrice())
+//                .imageLink(registerDrugRequest.getImageUrl())
+//                .isAvailable(true).build());
+//        logger.debug("Drug added successfully ID: {} Name: {}", drugEntity.getId(), drugEntity.getName());
     }
 
     public void updateDrugInventory(UpdateDrugRequest updateDrugRequest, UUID drugId) throws NotFoundException {
-        if (existsById(drugId)) {
-            DrugEntity drugEntity = drugEntityRepository.findById(drugId).get();
-            switch (updateDrugRequest.getUpdateType()) {
-                case ADD:
-                    drugEntity.setAvailableUnits(drugEntity.getAvailableUnits() + updateDrugRequest.getUnit());
-                    break;
-                case SET:
-                    drugEntity.setAvailableUnits(updateDrugRequest.getUnit());
-                    break;
-                case DEDUCT:
-                    Double units = drugEntity.getAvailableUnits() - updateDrugRequest.getUnit();
-                    if (units > 0) {
-                        drugEntity.setAvailableUnits(units);
-                    }
-                    break;
-                default:
-                    break;
-            }
-            drugEntityRepository.save(drugEntity);
-        }
+//        if (existsById(drugId)) {
+//            DrugEntity drugEntity = drugEntityRepository.findById(drugId).get();
+//            switch (updateDrugRequest.getUpdateType()) {
+//                case ADD:
+//                    drugEntity.setAvailableUnits(drugEntity.getAvailableUnits() + updateDrugRequest.getUnit());
+//                    break;
+//                case SET:
+//                    drugEntity.setAvailableUnits(updateDrugRequest.getUnit());
+//                    break;
+//                case DEDUCT:
+//                    Double units = drugEntity.getAvailableUnits() - updateDrugRequest.getUnit();
+//                    if (units > 0) {
+//                        drugEntity.setAvailableUnits(units);
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            drugEntityRepository.save(drugEntity);
+//        }
     }
 
 

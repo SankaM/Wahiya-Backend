@@ -57,7 +57,7 @@ public class ManagePatientsService {
 
     public PatientResponse getPatientResponse(UUID id) {
         PatientEntity patientEntity = patientEntityRepository.findById(id).get();
-        return PatientResponse.builder().id(patientEntity.getId().toString()).name(patientEntity.getName()).imageURL(patientEntity.getImageUrl()).build();
+        return PatientResponse.builder().id(patientEntity.getId().toString()).name(patientEntity.getFirstName()).imageURL(patientEntity.getImageUrl()).build();
     }
 
     public List<PatientSummary> getPatientsSummaryOfDoctor(UUID doctorId) throws NotFoundException {
@@ -65,7 +65,7 @@ public class ManagePatientsService {
             List<PatientEntity> patients = patientEntityRepository.findByDoctorIdAndIsActive(doctorId, true);
             if (!patients.isEmpty()) {
                 return patients.stream().map(p -> PatientSummary.builder()
-                        .age(p.getAge()).name(p.getName()).mobile(p.getMobile())
+//                        .age(p.getAge()).name(p.getFirstName()).mobile(p.getMobilePhone())
                         .patientId(p.getId())
                         .imageUrl(p.getImageUrl())
                         .build()).collect(Collectors.toList());
@@ -76,12 +76,14 @@ public class ManagePatientsService {
     }
 
     public void registerPatient(RegisterPatientRequest registerPatientRequest, UUID doctorId) {
-        PatientEntity patientEntity = save(PatientEntity.builder().age(registerPatientRequest.getAge())
-                .birthDate(registerPatientRequest.getBirthDate()).mobile(registerPatientRequest.getMobile())
-                .email(registerPatientRequest.getEmail()).name(registerPatientRequest.getName())
+        PatientEntity patientEntity = save(PatientEntity.builder()
+//                .age(registerPatientRequest.getAge())
+                .birthDate(registerPatientRequest.getBirthDate())
+                .mobilePhone(registerPatientRequest.getMobile())
+                .email(registerPatientRequest.getEmail()).firstName(registerPatientRequest.getName())
                 .healthProfile(registerPatientRequest.getHealthProfile()).isActive(true)
                 .userName(registerPatientRequest.getUserName()).doctorId(doctorId).build());
-        logger.debug("Patient added successfully ID: {} Name: {}", patientEntity.getId(), patientEntity.getName());
+        logger.debug("Patient added successfully ID: {} Name: {}", patientEntity.getId(), patientEntity.getFirstName());
     }
 
     public void inactivePatient(UUID doctorId, UUID patientId) throws NotFoundException {
@@ -132,7 +134,7 @@ public class ManagePatientsService {
                 prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
                         .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
                         .id(p.getId())
-                        .issuedDate(p.getIssuedDate())
+//                        .issuedDate(p.getIssuedDate())
                         .doses(doseEntityService.getDoseResponses(p.getId()))
                         .build()).collect(Collectors.toList());
 

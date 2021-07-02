@@ -6,7 +6,7 @@ import com.monda.edoctor.wahiya.dto.PrescriptionRequest;
 import com.monda.edoctor.wahiya.dto.PrescriptionResponse;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
-import com.monda.edoctor.wahiya.model.DoseEntity;
+import com.monda.edoctor.wahiya.model.DosageEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import com.monda.edoctor.wahiya.repository.PrescriptionEntityRepository;
 import lombok.Setter;
@@ -65,19 +65,20 @@ public class PrescriptionEntityService {
                     .id(prescriptionRequest.getId())
                     .doctorId(doctorId)
                     .patientId(patientId)
-                    .issuedDate(LocalDateTime.now()).build());
+                    .prescriptionDate(LocalDateTime.now())
+                    .build());
 
             for (DoseEntityRequest doseEntityRequest : prescriptionRequest.getDoses()) {
                 if (drugEntityService.existsById(doseEntityRequest.getDrugId())) {
-                    doseEntityService.save(DoseEntity.builder()
+                    doseEntityService.save(DosageEntity.builder()
                             .prescriptionId(prescriptionEntity.getId())
-                            .unitsPerDose(doseEntityRequest.getUnitsPerDose())
-                            .dosesPerDay(doseEntityRequest.getDosesPerDay())
-                            .numberOfDays(doseEntityRequest.getNumberOfDays())
-                            .beforeAfterMeal(doseEntityRequest.getBeforeAfterMeal())
-                            .note(doseEntityRequest.getNote())
-                            .fromDate(doseEntityRequest.getFromDate())
-                            .toDate(doseEntityRequest.getToDate())
+//                            .unitsPerDose(doseEntityRequest.getUnitsPerDose())
+//                            .dosesPerDay(doseEntityRequest.getDosesPerDay())
+//                            .numberOfDays(doseEntityRequest.getNumberOfDays())
+//                            .beforeAfterMeal(doseEntityRequest.getBeforeAfterMeal())
+//                            .notes(doseEntityRequest.getNote())
+//                            .fromDate(doseEntityRequest.getFromDate())
+//                            .toDate(doseEntityRequest.getToDate())
                             .drugId(doseEntityRequest.getDrugId())
                             .build());
                 }
@@ -93,7 +94,7 @@ public class PrescriptionEntityService {
             prescriptionResponse = PrescriptionResponse.builder()
                     .doctor(doctorEntityService.getDoctorResponse(prescription.getDoctorId()))
                     .id(prescription.getId())
-                    .issuedDate(prescription.getIssuedDate())
+//                    .issuedDate(prescription.getIssuedDate())
                     .doses(doseEntityService.getDoseResponses(prescription.getId()))
                     .build();
 

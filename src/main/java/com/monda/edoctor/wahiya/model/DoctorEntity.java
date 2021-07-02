@@ -2,10 +2,7 @@ package com.monda.edoctor.wahiya.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Table(name = "doctor", schema = "wahiya")
@@ -16,19 +13,29 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoctorEntity {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "user_name", unique = true)
-    private String userName;
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(name = "mobile_number" , unique = true)
-    private Integer mobile;
+    @Column(name = "speciality")
+    private String speciality;
+
+    @Column(name = "profile")
+    private String profile;
+
+    @Column(name = "general_work_hour")
+    private String generalWorkHour;
+
+    @Column(name = "mobile_phone" , unique = true)
+    private Integer mobilePhone;
 
     @Column(name = "email" , unique = true)
     private String email;
@@ -45,13 +52,18 @@ public class DoctorEntity {
     @Column(name = "zip_code")
     private String zip_code;
 
-    @Column(name = "image_link")
-    private String imageLink;
+    @Column(name = "image_url")
+    private String imageUrl;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "user_name", unique = true)
+    private String userName;
 
     @Column(name = "password")
     private String password;
 
+    @Column(name = "is_active")
+    private Boolean isActive;
+
+    @Column(name = "doctor_cost")
+    private Double doctorCost;
 }

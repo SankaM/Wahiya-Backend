@@ -48,7 +48,7 @@ public class DoctorEntityService {
 
     public DoctorResponse getDoctorResponse(UUID id) {
         DoctorEntity doctorEntity = doctorEntityRepository.findById(id).get();
-        return DoctorResponse.builder().id(doctorEntity.getId().toString()).imageURL(doctorEntity.getImageLink()).name(doctorEntity.getName()).build();
+        return DoctorResponse.builder().id(doctorEntity.getId().toString()).imageURL(doctorEntity.getImageUrl()).name(doctorEntity.getName()).build();
     }
 
     public DoctorEntity validateLogin(LoginRequest loginRequest) throws LoginException {

@@ -35,7 +35,7 @@ public class DoctorEntity {
     private String generalWorkHour;
 
     @Column(name = "mobile_phone" , unique = true)
-    private Integer mobilePhone;
+    private String mobilePhone;
 
     @Column(name = "email" , unique = true)
     private String email;

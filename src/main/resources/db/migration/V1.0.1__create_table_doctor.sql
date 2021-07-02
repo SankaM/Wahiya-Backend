@@ -5,7 +5,7 @@ create table wahiya.doctor (
     speciality varchar(255),
     profile varchar(500),
     general_work_hour varchar(255),
-    mobile_phone integer unique,
+    mobile_phone varchar(255) unique,
     email varchar(255) unique,
     address_1 varchar(255),
     address_2 varchar(255),

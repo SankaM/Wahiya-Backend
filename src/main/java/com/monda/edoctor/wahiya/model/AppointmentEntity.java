@@ -31,7 +31,7 @@ public class AppointmentEntity {
     private UUID patientId;
 
     @Column(name = "appointment_date")
-    private LocalDateTime issuedDate;
+    private LocalDateTime appointmentDate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

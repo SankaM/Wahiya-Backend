@@ -35,7 +35,7 @@ public class InventoryEntity {
     private String unitPriceCurrency;
 
     @Column(name = "is_available")
-    private Boolean isAvailable;
+    private Boolean isAvailable = true;
 
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;

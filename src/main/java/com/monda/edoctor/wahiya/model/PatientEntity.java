@@ -38,7 +38,7 @@ public class PatientEntity {
     @Column(name = "mobile_phone", unique = true)
     private String mobilePhone;
     
-    @Column(name = "health_profile")
+    @Column(name = "health_profile", length = 500)
     private String healthProfile;
 
     @Column(name = "nic")
@@ -54,7 +54,7 @@ public class PatientEntity {
     private String password;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "email", unique = true)
     private String email;

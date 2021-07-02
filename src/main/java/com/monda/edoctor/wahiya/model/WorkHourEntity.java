@@ -26,6 +26,6 @@ public class WorkHourEntity {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
 
-    @Column(name = "time")
+    @Column(name = "time_")
     private String time;
 }

@@ -28,7 +28,7 @@ public class DoctorEntity {
     @Column(name = "speciality")
     private String speciality;
 
-    @Column(name = "profile")
+    @Column(name = "profile", length = 500)
     private String profile;
 
     @Column(name = "general_work_hour")
@@ -62,7 +62,7 @@ public class DoctorEntity {
     private String password;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "doctor_cost")
     private Double doctorCost;

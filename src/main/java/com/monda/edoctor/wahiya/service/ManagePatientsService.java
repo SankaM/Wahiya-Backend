@@ -10,7 +10,6 @@ import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import com.monda.edoctor.wahiya.repository.PatientEntityRepository;
-import com.monda.edoctor.wahiya.repository.specification.PatientSpecification;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @Setter
 public class ManagePatientsService {
-
     private static final Logger logger = LoggerFactory.getLogger(ManagePatientsService.class);
 
     @Autowired
@@ -40,6 +39,10 @@ public class ManagePatientsService {
 
     @Autowired
     private DoseEntityService doseEntityService;
+
+    public static enum SearchPatientField {
+        NAME, USERNAME, EMAIL, MOBILE_PHONE
+    }
 
     public boolean existsById(UUID id) throws NotFoundException {
         if (!patientEntityRepository.existsById(id)) {
@@ -129,13 +132,20 @@ public class ManagePatientsService {
         throw new NoContentException("Patient not assign to doctor");
     }
 
-    public List<PatientEntity> searchPatient(String query) {
-        List<PatientEntity> patients = patientEntityRepository.findAll(PatientSpecification.textInAllColumns(query));
-        if (patients.isEmpty()) {
-            logger.debug("No patient available for: {}", query);
-            throw new NoContentException("No patient available for: " + query);
+    public List<PatientEntity> searchPatient(String query, SearchPatientField field) {
+        switch(field) {
+            case NAME: {
+                return patientEntityRepository.findByName(query);
+            } case EMAIL: {
+                return patientEntityRepository.findByEmailContains(query);
+            } case USERNAME: {
+                return patientEntityRepository.findByUserNameContains(query);
+            } case MOBILE_PHONE: {
+                return patientEntityRepository.findByMobilePhoneContains(query);
+            }
         }
-        return patients;
+
+        return new ArrayList<>();
     }
 
     public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws NotFoundException {

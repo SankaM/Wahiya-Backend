@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,8 +61,18 @@ public class ManagePatientsController {
 
     @GetMapping(value = "/patients/search")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PatientEntity> searchPatient(@RequestParam("query") String query) {
-        return managePatientsService.searchPatient(query);
+    public List<PatientEntity> searchPatient(@RequestParam("query") String query, @RequestParam("field") String field) {
+        if(field.equals("name")) {
+            return managePatientsService.searchPatient(query, ManagePatientsService.SearchPatientField.NAME);
+        } else if(field.equals("username")) {
+            return managePatientsService.searchPatient(query, ManagePatientsService.SearchPatientField.USERNAME);
+        } else if(field.equals("email")) {
+            return managePatientsService.searchPatient(query, ManagePatientsService.SearchPatientField.EMAIL);
+        } else if(field.equals("mobilePhone")) {
+            return managePatientsService.searchPatient(query, ManagePatientsService.SearchPatientField.MOBILE_PHONE);
+        }
+
+        return new ArrayList<>();
     }
 
     @PostMapping(value = "/doctors/{doctorId}/patients/{patientId}/prescription")

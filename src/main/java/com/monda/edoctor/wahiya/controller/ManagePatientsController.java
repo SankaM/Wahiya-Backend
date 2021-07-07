@@ -1,7 +1,7 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.MedicalHistoryResponse;
-import com.monda.edoctor.wahiya.dto.PatientSummary;
+import com.monda.edoctor.wahiya.dto.PatientResponse;
 import com.monda.edoctor.wahiya.dto.PrescriptionRequest;
 import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -40,8 +40,8 @@ public class ManagePatientsController {
     // Issue prescription API
     @GetMapping(value = "/doctors/{doctorId}/patients/summary")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PatientSummary> getPatientsSummaryOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
-        return managePatientsService.getPatientsSummaryOfDoctor(doctorId);
+    public List<PatientResponse> getPatientsSummaryOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
+        return managePatientsService.getPatientsOfDoctor(doctorId);
     }
 
     @GetMapping(value = "/doctors/{doctorId}/patients/{patientId}/details")

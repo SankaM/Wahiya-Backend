@@ -1,6 +1,9 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.*;
+import com.monda.edoctor.wahiya.dto.MedicalHistoryResponse;
+import com.monda.edoctor.wahiya.dto.PatientResponse;
+import com.monda.edoctor.wahiya.dto.PrescriptionResponse;
+import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -57,17 +60,31 @@ public class ManagePatientsService {
 
     public PatientResponse getPatientResponse(UUID id) {
         PatientEntity patientEntity = patientEntityRepository.findById(id).get();
-        return PatientResponse.builder().id(patientEntity.getId().toString()).name(patientEntity.getFirstName()).imageURL(patientEntity.getImageUrl()).build();
+        return PatientResponse.builder()
+                .id(patientEntity.getId())
+                .firstName(patientEntity.getFirstName())
+                .lastName(patientEntity.getLastName())
+                .birthDate(patientEntity.getBirthDate())
+                .gender(patientEntity.getGender() != null ? patientEntity.getGender().toString() : null)
+                .mobilePhone(patientEntity.getMobilePhone())
+                .imageUrl(patientEntity.getImageUrl())
+                .healthProfile(patientEntity.getHealthProfile())
+                .build();
     }
 
-    public List<PatientSummary> getPatientsSummaryOfDoctor(UUID doctorId) throws NotFoundException {
+    public List<PatientResponse> getPatientsOfDoctor(UUID doctorId) throws NotFoundException {
         if (doctorEntityService.existsById(doctorId)) {
             List<PatientEntity> patients = patientEntityRepository.findByDoctorIdAndIsActive(doctorId, true);
             if (!patients.isEmpty()) {
-                return patients.stream().map(p -> PatientSummary.builder()
-//                        .age(p.getAge()).name(p.getFirstName()).mobile(p.getMobilePhone())
-                        .patientId(p.getId())
+                return patients.stream().map(p -> PatientResponse.builder()
+                        .id(p.getId())
+                        .birthDate(p.getBirthDate())
+                        .gender(p.getGender() != null ? p.getGender().toString() : null)
+                        .firstName(p.getFirstName())
+                        .lastName(p.getLastName())
+                        .mobilePhone(p.getMobilePhone())
                         .imageUrl(p.getImageUrl())
+                        .healthProfile(p.getHealthProfile())
                         .build()).collect(Collectors.toList());
             }
         }

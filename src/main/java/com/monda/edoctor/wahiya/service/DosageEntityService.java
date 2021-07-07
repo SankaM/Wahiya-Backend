@@ -2,10 +2,8 @@ package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.dto.DoseResponse;
 import com.monda.edoctor.wahiya.model.DosageEntity;
-import com.monda.edoctor.wahiya.repository.DoseEntityRepository;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.monda.edoctor.wahiya.repository.DosageEntityRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,23 +12,29 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@Setter
-public class DoseEntityService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DoseEntityService.class);
+@Slf4j
+public class DosageEntityService {
 
     @Autowired
-    private DoseEntityRepository doseEntityRepository;
+    private DosageEntityRepository dosageEntityRepository;
 
     @Autowired
     private DrugEntityService drugEntityService;
 
+    // ============================================================================================================== OK
+    List<DosageEntity> findByPrescriptionId(UUID prescriptionId) {
+        return dosageEntityRepository.findByPrescriptionId(prescriptionId);
+    }
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     public DosageEntity save(DosageEntity doseEntity){
-        return doseEntityRepository.saveAndFlush(doseEntity);
+        return dosageEntityRepository.saveAndFlush(doseEntity);
     }
 
     public List<DoseResponse> getDoseResponses(UUID prescriptionId) {
-        List<DosageEntity> doses = doseEntityRepository.findByPrescriptionId(prescriptionId);
+        List<DosageEntity> doses = dosageEntityRepository.findByPrescriptionId(prescriptionId);
         return doses.stream().map(p -> DoseResponse.builder()
 //                .unitsPerDose(p.getUnitsPerDose())
 //                .beforeAfterMeal(p.getBeforeAfterMeal())

@@ -19,6 +19,11 @@ public class InvoiceController {
     @Autowired
     public PrescriptionEntityService prescriptionEntityService;
 
+    // ============================================================================================================== OK
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     @GetMapping(value = "/prescription/{prescriptionId}/invoice")
     @ResponseStatus(code = HttpStatus.OK)
     public InvoiceResponse addPrescription(@PathVariable("prescriptionId") UUID prescriptionId) throws NotFoundException {

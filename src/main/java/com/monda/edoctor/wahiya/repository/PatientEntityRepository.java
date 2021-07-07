@@ -2,7 +2,6 @@ package com.monda.edoctor.wahiya.repository;
 
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -14,12 +13,11 @@ import java.util.UUID;
  *
  * @author Priyantha Weerakoon
  */
-public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID>, JpaSpecificationExecutor {
-
+public interface PatientEntityRepository extends JpaRepository<PatientEntity, UUID> {
+    // ============================================================================================================== OK
     List<PatientEntity> findByDoctorIdAndIsActive(UUID doctorId, Boolean isActive);
 
-    Optional<PatientEntity> findByDoctorIdAndId(UUID doctorId, UUID patientId);
-
+    // Todo: Low performance query. Find a way to tune-in the query
     @Query("SELECT p FROM PatientEntity p WHERE lower(p.firstName) LIKE lower(concat('%',:name,'%')) OR lower(p.lastName) LIKE lower(concat('%',:name,'%'))")
     List<PatientEntity> findByName(String name);
 
@@ -28,4 +26,11 @@ public interface PatientEntityRepository extends JpaRepository<PatientEntity, UU
     List<PatientEntity> findByUserNameContains(String username);
 
     List<PatientEntity> findByMobilePhoneContains(String mobilePhone);
+
+    Optional<PatientEntity> findByDoctorIdAndId(UUID doctorId, UUID patientId);
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
+
 }

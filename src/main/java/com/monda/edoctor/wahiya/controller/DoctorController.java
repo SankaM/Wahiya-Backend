@@ -16,6 +16,11 @@ public class DoctorController {
     @Autowired
     private DoctorEntityService doctorEntityService;
 
+    // ============================================================================================================== OK
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     @PostMapping(value = "/doctor")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addDoctor(@RequestBody DoctorEntity doctorEntity) {

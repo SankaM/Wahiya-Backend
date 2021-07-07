@@ -10,9 +10,7 @@ import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DrugEntity;
 import com.monda.edoctor.wahiya.repository.DrugEntityRepository;
 import com.monda.edoctor.wahiya.repository.specification.DrugSpecification;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -23,18 +21,20 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Setter
+@Slf4j
 public class DrugEntityService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DrugEntityService.class);
-
 
     @Autowired
     private DrugEntityRepository drugEntityRepository;
 
+    // ============================================================================================================== OK
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     public boolean existsById(UUID id) throws NotFoundException {
         if (!drugEntityRepository.existsById(id)) {
-            logger.error("Drug ID not available : {}", id);
+            log.error("Drug ID not available : {}", id);
             throw new NotFoundException("Requested drug ID not available");
         }
         return true;
@@ -44,7 +44,7 @@ public class DrugEntityService {
         try {
             return drugEntityRepository.saveAndFlush(drugEntity);
         } catch (DataIntegrityViolationException e) {
-            logger.error("Duplicate Record : {}", e.getMessage());
+            log.error("Duplicate Record : {}", e.getMessage());
             throw new DuplicateContentException("Drug already available :" + drugEntity.getName());
         }
     }
@@ -73,7 +73,7 @@ public class DrugEntityService {
 //                .unitPrice(registerDrugRequest.getUnitPrice() == null ? 0 : registerDrugRequest.getUnitPrice())
 //                .imageLink(registerDrugRequest.getImageUrl())
 //                .isAvailable(true).build());
-//        logger.debug("Drug added successfully ID: {} Name: {}", drugEntity.getId(), drugEntity.getName());
+//        log.debug("Drug added successfully ID: {} Name: {}", drugEntity.getId(), drugEntity.getName());
     }
 
     public void updateDrugInventory(UpdateDrugRequest updateDrugRequest, UUID drugId) throws NotFoundException {
@@ -103,7 +103,7 @@ public class DrugEntityService {
     public List<DrugEntity> searchDrug(String query) {
         List<DrugEntity> drugs = drugEntityRepository.findAll(DrugSpecification.textInAllColumns(query));
         if (drugs.isEmpty()) {
-            logger.debug("No Drugs available for: {}", query);
+            log.debug("No Drugs available for: {}", query);
             throw new NoContentException("No drugs available for: " + query);
         }
         return drugs;
@@ -113,7 +113,7 @@ public class DrugEntityService {
         PageRequest page = PageRequest.of(paginationRequest.getPage(), paginationRequest.getLimit());
         Page<DrugEntity> drugs = drugEntityRepository.findAll(page);
         if (drugs.isEmpty()) {
-            logger.debug("No Drugs available for");
+            log.debug("No Drugs available for");
             throw new NoContentException("No drugs available");
         }
         return drugs;

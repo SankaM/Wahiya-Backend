@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(value = { "password" })
 public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

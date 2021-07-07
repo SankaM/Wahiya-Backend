@@ -24,6 +24,11 @@ public class InventoryController {
     @Autowired
     public DrugEntityService drugEntityService;
 
+    // ============================================================================================================== OK
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     @PostMapping(value = "/inventory/drug/register")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void registerDrug(@RequestBody RegisterDrugRequest registerDrugRequest) {

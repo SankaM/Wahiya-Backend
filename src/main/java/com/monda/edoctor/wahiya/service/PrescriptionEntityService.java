@@ -9,9 +9,7 @@ import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DosageEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import com.monda.edoctor.wahiya.repository.PrescriptionEntityRepository;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +18,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Setter
+@Slf4j
 public class PrescriptionEntityService {
-
-    private static final Logger logger = LoggerFactory.getLogger(PrescriptionEntityService.class);
 
     @Autowired
     private PrescriptionEntityRepository prescriptionEntityRepository;
@@ -38,11 +34,19 @@ public class PrescriptionEntityService {
     private DrugEntityService drugEntityService;
 
     @Autowired
-    private DoseEntityService doseEntityService;
+    private DosageEntityService dosageEntityService;
 
+    // ============================================================================================================== OK
+    public List<PrescriptionEntity> findByPatientId(UUID patientId){
+        return prescriptionEntityRepository.findByPatientIdOrderByPrescriptionDateDesc(patientId);
+    }
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     public boolean existsById(UUID id) throws NotFoundException {
         if (!prescriptionEntityRepository.existsById(id)) {
-            logger.error("Prescription ID not available : {}", id);
+            log.error("Prescription ID not available : {}", id);
             throw new NotFoundException("Requested patient ID not available");
         }
         return true;
@@ -51,7 +55,7 @@ public class PrescriptionEntityService {
     public PrescriptionEntity save(PrescriptionEntity prescriptionEntity) {
         try {
             if (existsById(prescriptionEntity.getId())) {
-                logger.error("Duplicate Record : {}", prescriptionEntity.getId());
+                log.error("Duplicate Record : {}", prescriptionEntity.getId());
                 throw new DuplicateContentException("Prescription already available");
             }
         } catch (NotFoundException e) {
@@ -70,7 +74,7 @@ public class PrescriptionEntityService {
 
             for (DoseEntityRequest doseEntityRequest : prescriptionRequest.getDoses()) {
                 if (drugEntityService.existsById(doseEntityRequest.getDrugId())) {
-                    doseEntityService.save(DosageEntity.builder()
+                    dosageEntityService.save(DosageEntity.builder()
                             .prescriptionId(prescriptionEntity.getId())
 //                            .unitsPerDose(doseEntityRequest.getUnitsPerDose())
 //                            .dosesPerDay(doseEntityRequest.getDosesPerDay())
@@ -95,16 +99,11 @@ public class PrescriptionEntityService {
                     .doctor(doctorEntityService.getDoctorResponse(prescription.getDoctorId()))
                     .id(prescription.getId())
 //                    .issuedDate(prescription.getIssuedDate())
-                    .doses(doseEntityService.getDoseResponses(prescription.getId()))
+                    .doses(dosageEntityService.getDoseResponses(prescription.getId()))
                     .build();
 
         }
         return InvoiceResponse.builder().prescription(prescriptionResponse)
                 .patient(managePatientsService.getPatientResponse(prescription.getPatientId())).build();
     }
-
-    public List<PrescriptionEntity> findByPatientId(UUID patientId){
-        return prescriptionEntityRepository.findByPatientId(patientId);
-    }
-
 }

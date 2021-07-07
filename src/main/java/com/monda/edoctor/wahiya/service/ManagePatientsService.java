@@ -7,16 +7,19 @@ import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
+import com.monda.edoctor.wahiya.model.DiagnosisEntity;
+import com.monda.edoctor.wahiya.model.DosageEntity;
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
+import com.monda.edoctor.wahiya.repository.DiagnosisEntityRepository;
 import com.monda.edoctor.wahiya.repository.PatientEntityRepository;
-import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,9 +27,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@Setter
+@Slf4j
 public class ManagePatientsService {
-    private static final Logger logger = LoggerFactory.getLogger(ManagePatientsService.class);
 
     @Autowired
     private DoctorEntityService doctorEntityService;
@@ -38,61 +40,122 @@ public class ManagePatientsService {
     private PrescriptionEntityService prescriptionEntityService;
 
     @Autowired
-    private DoseEntityService doseEntityService;
+    private DosageEntityService dosageEntityService;
+
+    @Autowired
+    private DiagnosisEntityRepository diagnosisEntityRepository;
 
     public static enum SearchPatientField {
         NAME, USERNAME, EMAIL, MOBILE_PHONE
     }
 
+    // ============================================================================================================== OK
     public boolean existsById(UUID id) throws NotFoundException {
         if (!patientEntityRepository.existsById(id)) {
-            logger.error("Patient ID not available : {}", id);
+            log.error("Patient ID not available : {}", id);
             throw new NotFoundException("Requested patient ID not available");
         }
+
         return true;
-    }
-
-    public PatientEntity save(PatientEntity patientEntity) {
-        try {
-            return patientEntityRepository.saveAndFlush(patientEntity);
-        } catch (DataIntegrityViolationException e) {
-            logger.error("Duplicate Record : {}", e.getMessage());
-            throw new DuplicateContentException(e.getMessage());
-        }
-    }
-
-    public PatientResponse getPatientResponse(UUID id) {
-        PatientEntity patientEntity = patientEntityRepository.findById(id).get();
-        return PatientResponse.builder()
-                .id(patientEntity.getId())
-                .firstName(patientEntity.getFirstName())
-                .lastName(patientEntity.getLastName())
-                .birthDate(patientEntity.getBirthDate())
-                .gender(patientEntity.getGender() != null ? patientEntity.getGender().toString() : null)
-                .mobilePhone(patientEntity.getMobilePhone())
-                .imageUrl(patientEntity.getImageUrl())
-                .healthProfile(patientEntity.getHealthProfile())
-                .build();
     }
 
     public List<PatientResponse> getPatientsOfDoctor(UUID doctorId) throws NotFoundException {
         if (doctorEntityService.existsById(doctorId)) {
             List<PatientEntity> patients = patientEntityRepository.findByDoctorIdAndIsActive(doctorId, true);
             if (!patients.isEmpty()) {
-                return patients.stream().map(p -> PatientResponse.builder()
-                        .id(p.getId())
-                        .birthDate(p.getBirthDate())
-                        .gender(p.getGender() != null ? p.getGender().toString() : null)
-                        .firstName(p.getFirstName())
-                        .lastName(p.getLastName())
-                        .mobilePhone(p.getMobilePhone())
-                        .imageUrl(p.getImageUrl())
-                        .healthProfile(p.getHealthProfile())
-                        .build()).collect(Collectors.toList());
+                return patients.stream().map(p -> PatientResponse.build(p, findLastPatientDiagnosisAsString(p.getId()))).collect(Collectors.toList());
             }
         }
-        logger.debug("Active Patient not assign for Doctor ID : {}", doctorId);
-        throw new NoContentException("No Active patient available");
+
+        return new ArrayList<>();
+    }
+
+    public List<PatientResponse> searchPatient(String query, SearchPatientField field) {
+        List<PatientEntity> patients = new ArrayList<>();
+
+        switch(field) {
+            case NAME: {
+                patients = patientEntityRepository.findByName(query);
+                break;
+            } case EMAIL: {
+                patients = patientEntityRepository.findByEmailContains(query);
+                break;
+            } case USERNAME: {
+                patients = patientEntityRepository.findByUserNameContains(query);
+                break;
+            } case MOBILE_PHONE: {
+                patients = patientEntityRepository.findByMobilePhoneContains(query);
+                break;
+            }
+        }
+
+        if (!patients.isEmpty()) {
+            return patients.stream().map(p -> PatientResponse.build(p, findLastPatientDiagnosisAsString(p.getId()))).collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
+    }
+
+    public PatientEntity getPatientDetails(UUID doctorId, UUID patientId) throws NotFoundException {
+        if (doctorEntityService.existsById(doctorId) && existsById(patientId)) {
+            Optional<PatientEntity> patientEntityOpt = patientEntityRepository.findByDoctorIdAndId(doctorId, patientId);
+            if (patientEntityOpt.isPresent()) {
+                return patientEntityOpt.get();
+            }
+        }
+
+        log.error("Patient ID: {} not  assigned to Doctor ID: {}", patientId, doctorId);
+        throw new NoContentException("Patient not assign to doctor");
+    }
+
+    public DiagnosisEntity findLastPatientDiagnosis(UUID patientId) {
+        val prescriptions = prescriptionEntityService.findByPatientId(patientId);
+
+        for(PrescriptionEntity p: prescriptions) {
+            int treatmentDays = 0;
+            val dosages = dosageEntityService.findByPrescriptionId(p.getId());
+            for(DosageEntity d: dosages) {
+                if(d.getTreatmentDays() > treatmentDays) treatmentDays = d.getTreatmentDays();
+            }
+
+            if(p.getPrescriptionDate().plusDays(treatmentDays).isAfter(LocalDateTime.now())) {
+                val diagnosisOpt = diagnosisEntityRepository.findById(p.getDiagnosisId());
+                if(diagnosisOpt.isPresent()) {
+                    return diagnosisOpt.get();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public String findLastPatientDiagnosisAsString(UUID patientId) {
+        val d = findLastPatientDiagnosis(patientId);
+        if(d != null) return d.getName();
+
+        return "No last diagnosis data";
+    }
+
+    public PatientResponse getPatientResponse(UUID id) throws NotFoundException {
+        if (!patientEntityRepository.existsById(id)) {
+            log.error("Patient ID not available : {}", id);
+            throw new NotFoundException("Requested patient ID not available");
+        }
+
+        PatientEntity p = patientEntityRepository.findById(id).get();
+        return PatientResponse.build(p, findLastPatientDiagnosisAsString(p.getId()));
+    }
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
+    public PatientEntity save(PatientEntity patientEntity) {
+        try {
+            return patientEntityRepository.saveAndFlush(patientEntity);
+        } catch (DataIntegrityViolationException e) {
+            log.error("Duplicate Record : {}", e.getMessage());
+            throw new DuplicateContentException(e.getMessage());
+        }
     }
 
     public void registerPatient(RegisterPatientRequest registerPatientRequest, UUID doctorId) {
@@ -103,7 +166,7 @@ public class ManagePatientsService {
                 .email(registerPatientRequest.getEmail()).firstName(registerPatientRequest.getName())
                 .healthProfile(registerPatientRequest.getHealthProfile()).isActive(true)
                 .userName(registerPatientRequest.getUserName()).doctorId(doctorId).build());
-        logger.debug("Patient added successfully ID: {} Name: {}", patientEntity.getId(), patientEntity.getFirstName());
+        log.debug("Patient added successfully ID: {} Name: {}", patientEntity.getId(), patientEntity.getFirstName());
     }
 
     public void inactivePatient(UUID doctorId, UUID patientId) throws NotFoundException {
@@ -113,39 +176,12 @@ public class ManagePatientsService {
                 PatientEntity patientEntity = patientEntityOpt.get();
                 patientEntity.setIsActive(false);
                 patientEntityRepository.save(patientEntity);
-                logger.debug("Patient : {} inactivate successfully.", patientId);
+                log.debug("Patient : {} inactivate successfully.", patientId);
             } else {
-                logger.error("Patient: {} not  assigned to Doctor: {}", patientId, doctorId);
+                log.error("Patient: {} not  assigned to Doctor: {}", patientId, doctorId);
                 throw new NoContentException("Patient not assign to doctor");
             }
         }
-    }
-
-    public PatientEntity getPatientDetails(UUID doctorId, UUID patientId) throws NotFoundException {
-        if (doctorEntityService.existsById(doctorId) && existsById(patientId)) {
-            Optional<PatientEntity> patientEntityOpt = patientEntityRepository.findByDoctorIdAndId(doctorId, patientId);
-            if (patientEntityOpt.isPresent()) {
-                return patientEntityOpt.get();
-            }
-        }
-        logger.error("Patient: {} not  assigned to Doctor: {}", patientId, doctorId);
-        throw new NoContentException("Patient not assign to doctor");
-    }
-
-    public List<PatientEntity> searchPatient(String query, SearchPatientField field) {
-        switch(field) {
-            case NAME: {
-                return patientEntityRepository.findByName(query);
-            } case EMAIL: {
-                return patientEntityRepository.findByEmailContains(query);
-            } case USERNAME: {
-                return patientEntityRepository.findByUserNameContains(query);
-            } case MOBILE_PHONE: {
-                return patientEntityRepository.findByMobilePhoneContains(query);
-            }
-        }
-
-        return new ArrayList<>();
     }
 
     public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws NotFoundException {
@@ -155,14 +191,14 @@ public class ManagePatientsService {
         if (existsById(patientId)) {
             List<PrescriptionEntity> prescriptions = prescriptionEntityService.findByPatientId(patientId);
             if (prescriptions.isEmpty()) {
-                logger.debug("No history available for: {}", patientId);
+                log.debug("No history available for: {}", patientId);
             } else {
-                logger.debug("Found history for: {}", patientId);
+                log.debug("Found history for: {}", patientId);
                 prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
                         .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
                         .id(p.getId())
 //                        .issuedDate(p.getIssuedDate())
-                        .doses(doseEntityService.getDoseResponses(p.getId()))
+                        .doses(dosageEntityService.getDoseResponses(p.getId()))
                         .build()).collect(Collectors.toList());
 
                 builder.prescriptions(prescriptionResponses);

@@ -19,6 +19,11 @@ public class LoginController {
     @Autowired
     private DoctorEntityService doctorEntityService;
 
+    // ============================================================================================================== OK
+
+    // ======================================================================================================== PROGRESS
+
+    // ========================================================================================================= NOT YET
     @PostMapping(value = "/doctor/login")
     @ResponseStatus(code = HttpStatus.OK)
     public LoginResponse login(@RequestBody LoginRequest loginRequest) throws LoginException {

@@ -19,7 +19,7 @@ public class DrugEntity {
     }
 
     public enum MeasurementUnit {
-        MILLIGRAM, MILLILITER,
+        MG, ML,
     }
 
     @Id

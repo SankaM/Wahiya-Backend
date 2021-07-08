@@ -1,12 +1,11 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.MedicalHistoryResponse;
-import com.monda.edoctor.wahiya.dto.PatientResponse;
-import com.monda.edoctor.wahiya.dto.PrescriptionRequest;
-import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
+import com.monda.edoctor.wahiya.dto.res.MedicalHistoryResponse;
+import com.monda.edoctor.wahiya.dto.res.PatientResponse;
+import com.monda.edoctor.wahiya.dto.req.PrescriptionRequest;
+import com.monda.edoctor.wahiya.dto.req.RegisterPatientRequest;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.exception.WrongParameterException;
-import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.service.ManagePatientsService;
 import com.monda.edoctor.wahiya.service.PrescriptionEntityService;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +60,11 @@ public class ManagePatientsController {
     }
 
     // ======================================================================================================== PROGRESS
+    @GetMapping(value = "/patients/{patientId}/history")
+    @ResponseStatus(code = HttpStatus.OK)
+    public MedicalHistoryResponse getPatientMedicalHistory(@PathVariable("patientId") UUID patientId) throws NotFoundException {
+        return managePatientsService.getPatientMedicalHistory(patientId);
+    }
 
     // ========================================================================================================= NOT YET
     @PostMapping(value = "/doctors/{doctorId}/patients/register")
@@ -79,11 +83,5 @@ public class ManagePatientsController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addPrescription(@PathVariable("doctorId") UUID doctorId, @PathVariable("patientId") UUID patientId, @RequestBody PrescriptionRequest prescriptionRequest) throws NotFoundException {
         prescriptionEntityService.addPrescription(doctorId, patientId, prescriptionRequest);
-    }
-
-    @GetMapping(value = "/patients/{patientId}/history")
-    @ResponseStatus(code = HttpStatus.OK)
-    public MedicalHistoryResponse getPatientMedicalHistory(@PathVariable("patientId") UUID patientId) throws NotFoundException {
-        return managePatientsService.getPatientMedicalHistory(patientId);
     }
 }

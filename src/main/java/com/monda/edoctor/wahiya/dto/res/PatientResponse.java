@@ -1,4 +1,4 @@
-package com.monda.edoctor.wahiya.dto;
+package com.monda.edoctor.wahiya.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.monda.edoctor.wahiya.model.PatientEntity;
@@ -44,13 +44,16 @@ public class PatientResponse {
 
     public static PatientResponse buildPatientSummary(PatientEntity p, String currentDiagnosis) {
         val res = new PatientResponse();
-        res.id = p.getId();
-        res.firstName = p.getFirstName();
-        res.lastName = p.getLastName();
-        res.birthDate = p.getBirthDate();
-        res.imageUrl = p.getImageUrl();
-        res.gender = p.getGender() != null ? p.getGender().toString() : null;
-        res.currentDiagnosis = currentDiagnosis;
+
+        if(p != null) {
+            res.id = p.getId();
+            res.firstName = p.getFirstName();
+            res.lastName = p.getLastName();
+            res.birthDate = p.getBirthDate();
+            res.imageUrl = p.getImageUrl();
+            res.gender = p.getGender() != null ? p.getGender().toString() : null;
+            res.currentDiagnosis = currentDiagnosis;
+        }
 
         return res;
     }

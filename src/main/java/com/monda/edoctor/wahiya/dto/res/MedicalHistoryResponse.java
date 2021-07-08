@@ -1,4 +1,4 @@
-package com.monda.edoctor.wahiya.dto;
+package com.monda.edoctor.wahiya.dto.res;
 
 import lombok.*;
 
@@ -11,5 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class MedicalHistoryResponse {
     private PatientResponse patient;
+
     private List<PrescriptionResponse> prescriptions;
 }

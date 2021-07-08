@@ -1,9 +1,7 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.MedicalHistoryResponse;
-import com.monda.edoctor.wahiya.dto.PatientResponse;
-import com.monda.edoctor.wahiya.dto.PrescriptionResponse;
-import com.monda.edoctor.wahiya.dto.RegisterPatientRequest;
+import com.monda.edoctor.wahiya.dto.req.RegisterPatientRequest;
+import com.monda.edoctor.wahiya.dto.res.*;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -12,6 +10,7 @@ import com.monda.edoctor.wahiya.model.DosageEntity;
 import com.monda.edoctor.wahiya.model.PatientEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import com.monda.edoctor.wahiya.repository.DiagnosisEntityRepository;
+import com.monda.edoctor.wahiya.repository.DoctorEntityRepository;
 import com.monda.edoctor.wahiya.repository.PatientEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -44,6 +43,9 @@ public class ManagePatientsService {
 
     @Autowired
     private DiagnosisEntityRepository diagnosisEntityRepository;
+
+    @Autowired
+    private DoctorEntityRepository doctorEntityRepository;
 
     public static enum SearchPatientField {
         NAME, USERNAME, EMAIL, MOBILE_PHONE
@@ -137,13 +139,32 @@ public class ManagePatientsService {
     }
 
     public PatientResponse getPatientResponse(UUID id) throws NotFoundException {
-        if (!patientEntityRepository.existsById(id)) {
-            log.error("Patient ID not available : {}", id);
-            throw new NotFoundException("Requested patient ID not available");
-        }
+        existsById(id);
 
         PatientEntity p = patientEntityRepository.findById(id).get();
         return PatientResponse.buildPatientSummary(p, findLastPatientDiagnosisAsString(p.getId()));
+    }
+
+    public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws NotFoundException {
+        existsById(patientId);
+
+        val builder = MedicalHistoryResponse.builder().patient(getPatientResponse(patientId));
+        val prescriptions = prescriptionEntityService.findByPatientId(patientId);
+        if (!prescriptions.isEmpty()) {
+            log.debug("Found history for: {}", patientId);
+            val prescriptionResponses = prescriptions.stream()
+                    .map(p -> {
+                        val doctorResponse = DoctorResponse.buildDoctorSummary(doctorEntityRepository.findById(p.getDoctorId()).get());
+                        val diagnosisResponse = DiagnosisResponse.build(diagnosisEntityRepository.findById(p.getDiagnosisId()).get());
+                        val dosageResponseList = dosageEntityService.findDosageResponseByPrescriptionId(p.getId());
+
+                        return PrescriptionResponse.build(p, doctorResponse, diagnosisResponse, dosageResponseList);
+                    }).collect(Collectors.toList());
+
+            builder.prescriptions(prescriptionResponses);
+        }
+
+        return builder.build();
     }
 
     // ======================================================================================================== PROGRESS
@@ -182,29 +203,5 @@ public class ManagePatientsService {
                 throw new NoContentException("Patient not assign to doctor");
             }
         }
-    }
-
-    public MedicalHistoryResponse getPatientMedicalHistory(UUID patientId) throws NotFoundException {
-        MedicalHistoryResponse.MedicalHistoryResponseBuilder builder = MedicalHistoryResponse.builder().patient(getPatientResponse(patientId));
-
-        List<PrescriptionResponse> prescriptionResponses = null;
-        if (existsById(patientId)) {
-            List<PrescriptionEntity> prescriptions = prescriptionEntityService.findByPatientId(patientId);
-            if (prescriptions.isEmpty()) {
-                log.debug("No history available for: {}", patientId);
-            } else {
-                log.debug("Found history for: {}", patientId);
-                prescriptionResponses = prescriptions.stream().map(p -> PrescriptionResponse.builder()
-                        .doctor(doctorEntityService.getDoctorResponse(p.getDoctorId()))
-                        .id(p.getId())
-//                        .issuedDate(p.getIssuedDate())
-                        .doses(dosageEntityService.getDoseResponses(p.getId()))
-                        .build()).collect(Collectors.toList());
-
-                builder.prescriptions(prescriptionResponses);
-            }
-        }
-
-        return builder.build();
     }
 }

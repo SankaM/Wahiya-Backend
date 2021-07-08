@@ -1,8 +1,8 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.PaginationRequest;
-import com.monda.edoctor.wahiya.dto.RegisterDrugRequest;
-import com.monda.edoctor.wahiya.dto.UpdateDrugRequest;
+import com.monda.edoctor.wahiya.dto.req.PaginationRequest;
+import com.monda.edoctor.wahiya.dto.req.RegisterDrugRequest;
+import com.monda.edoctor.wahiya.dto.req.UpdateDrugRequest;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DrugEntity;
 import com.monda.edoctor.wahiya.service.DrugEntityService;

@@ -1,6 +1,6 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.InvoiceResponse;
+import com.monda.edoctor.wahiya.dto.res.InvoiceResponse;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.service.PrescriptionEntityService;
 import lombok.extern.slf4j.Slf4j;

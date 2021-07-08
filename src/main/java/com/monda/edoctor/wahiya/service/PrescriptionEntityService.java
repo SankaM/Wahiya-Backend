@@ -1,15 +1,16 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.DoseEntityRequest;
-import com.monda.edoctor.wahiya.dto.InvoiceResponse;
-import com.monda.edoctor.wahiya.dto.PrescriptionRequest;
-import com.monda.edoctor.wahiya.dto.PrescriptionResponse;
+import com.monda.edoctor.wahiya.dto.req.DoseEntityRequest;
+import com.monda.edoctor.wahiya.dto.req.PrescriptionRequest;
+import com.monda.edoctor.wahiya.dto.res.InvoiceResponse;
+import com.monda.edoctor.wahiya.dto.res.PrescriptionResponse;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DosageEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import com.monda.edoctor.wahiya.repository.PrescriptionEntityRepository;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,7 +100,7 @@ public class PrescriptionEntityService {
                     .doctor(doctorEntityService.getDoctorResponse(prescription.getDoctorId()))
                     .id(prescription.getId())
 //                    .issuedDate(prescription.getIssuedDate())
-                    .doses(dosageEntityService.getDoseResponses(prescription.getId()))
+//                    .dosage(dosageEntityService.getDoseResponses(prescription.getId()))
                     .build();
 
         }

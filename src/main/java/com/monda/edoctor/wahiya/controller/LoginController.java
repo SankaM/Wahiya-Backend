@@ -1,7 +1,7 @@
 package com.monda.edoctor.wahiya.controller;
 
-import com.monda.edoctor.wahiya.dto.LoginRequest;
-import com.monda.edoctor.wahiya.dto.LoginResponse;
+import com.monda.edoctor.wahiya.dto.req.LoginRequest;
+import com.monda.edoctor.wahiya.dto.res.LoginResponse;
 import com.monda.edoctor.wahiya.exception.LoginException;
 import com.monda.edoctor.wahiya.model.DoctorEntity;
 import com.monda.edoctor.wahiya.service.DoctorEntityService;

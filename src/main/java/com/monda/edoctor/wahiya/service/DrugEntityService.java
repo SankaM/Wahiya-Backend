@@ -1,9 +1,9 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.DrugResponse;
-import com.monda.edoctor.wahiya.dto.PaginationRequest;
-import com.monda.edoctor.wahiya.dto.RegisterDrugRequest;
-import com.monda.edoctor.wahiya.dto.UpdateDrugRequest;
+import com.monda.edoctor.wahiya.dto.res.DrugResponse;
+import com.monda.edoctor.wahiya.dto.req.PaginationRequest;
+import com.monda.edoctor.wahiya.dto.req.RegisterDrugRequest;
+import com.monda.edoctor.wahiya.dto.req.UpdateDrugRequest;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;

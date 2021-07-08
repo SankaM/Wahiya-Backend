@@ -1,4 +1,4 @@
-package com.monda.edoctor.wahiya.dto;
+package com.monda.edoctor.wahiya.dto.req;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

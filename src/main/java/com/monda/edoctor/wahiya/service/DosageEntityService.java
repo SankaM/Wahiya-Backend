@@ -1,9 +1,12 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.DoseResponse;
+import com.monda.edoctor.wahiya.dto.res.DosageResponse;
+import com.monda.edoctor.wahiya.dto.res.DrugResponse;
 import com.monda.edoctor.wahiya.model.DosageEntity;
 import com.monda.edoctor.wahiya.repository.DosageEntityRepository;
+import com.monda.edoctor.wahiya.repository.DrugEntityRepository;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,21 +24,33 @@ public class DosageEntityService {
     @Autowired
     private DrugEntityService drugEntityService;
 
+    @Autowired
+    private DrugEntityRepository drugEntityRepository;
+
     // ============================================================================================================== OK
     List<DosageEntity> findByPrescriptionId(UUID prescriptionId) {
         return dosageEntityRepository.findByPrescriptionId(prescriptionId);
     }
 
     // ======================================================================================================== PROGRESS
+    List<DosageResponse> findDosageResponseByPrescriptionId(UUID prescriptionId) {
+        val dosageList = findByPrescriptionId(prescriptionId);
+
+        return dosageList.stream().map(d -> {
+            val drugResponse = DrugResponse.buildDrug(drugEntityRepository.getOne(d.getDrugId()));
+
+            return DosageResponse.build(d, drugResponse);
+        }).collect(Collectors.toList());
+    }
 
     // ========================================================================================================= NOT YET
     public DosageEntity save(DosageEntity doseEntity){
         return dosageEntityRepository.saveAndFlush(doseEntity);
     }
 
-    public List<DoseResponse> getDoseResponses(UUID prescriptionId) {
+    public List<DosageResponse> getDoseResponses(UUID prescriptionId) {
         List<DosageEntity> doses = dosageEntityRepository.findByPrescriptionId(prescriptionId);
-        return doses.stream().map(p -> DoseResponse.builder()
+        return doses.stream().map(p -> DosageResponse.builder()
 //                .unitsPerDose(p.getUnitsPerDose())
 //                .beforeAfterMeal(p.getBeforeAfterMeal())
 //                .dosesPerDay(p.getDosesPerDay())

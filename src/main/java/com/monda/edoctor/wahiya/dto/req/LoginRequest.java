@@ -1,4 +1,4 @@
-package com.monda.edoctor.wahiya.dto;
+package com.monda.edoctor.wahiya.dto.req;
 
 import lombok.*;
 

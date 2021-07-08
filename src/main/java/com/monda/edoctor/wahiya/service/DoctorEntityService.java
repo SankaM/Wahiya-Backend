@@ -1,7 +1,7 @@
 package com.monda.edoctor.wahiya.service;
 
-import com.monda.edoctor.wahiya.dto.DoctorResponse;
-import com.monda.edoctor.wahiya.dto.LoginRequest;
+import com.monda.edoctor.wahiya.dto.res.DoctorResponse;
+import com.monda.edoctor.wahiya.dto.req.LoginRequest;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.LoginException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -53,7 +53,7 @@ public class DoctorEntityService {
 
     public DoctorResponse getDoctorResponse(UUID id) {
         DoctorEntity doctorEntity = doctorEntityRepository.findById(id).get();
-        return DoctorResponse.builder().id(doctorEntity.getId().toString()).imageURL(doctorEntity.getImageUrl()).name(doctorEntity.getName()).build();
+        return DoctorResponse.builder().id(doctorEntity.getId()).imageURL(doctorEntity.getImageUrl()).name(doctorEntity.getName()).build();
     }
 
     public DoctorEntity validateLogin(LoginRequest loginRequest) throws LoginException {

@@ -54,7 +54,7 @@ public class ManagePatientsController {
 
     @GetMapping(value = "/doctors/{doctorId}/patients/{patientId}/details")
     @ResponseStatus(code = HttpStatus.OK)
-    public PatientEntity getPatientDetails(@PathVariable("doctorId") UUID doctorId,
+    public PatientResponse getPatientDetails(@PathVariable("doctorId") UUID doctorId,
                                            @PathVariable("patientId") UUID patientId) throws NotFoundException {
 
         return managePatientsService.getPatientDetails(doctorId, patientId);

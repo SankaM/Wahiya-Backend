@@ -63,7 +63,7 @@ public class ManagePatientsService {
         if (doctorEntityService.existsById(doctorId)) {
             List<PatientEntity> patients = patientEntityRepository.findByDoctorIdAndIsActive(doctorId, true);
             if (!patients.isEmpty()) {
-                return patients.stream().map(p -> PatientResponse.build(p, findLastPatientDiagnosisAsString(p.getId()))).collect(Collectors.toList());
+                return patients.stream().map(p -> PatientResponse.buildPatientSummary(p, findLastPatientDiagnosisAsString(p.getId()))).collect(Collectors.toList());
             }
         }
 
@@ -90,17 +90,17 @@ public class ManagePatientsService {
         }
 
         if (!patients.isEmpty()) {
-            return patients.stream().map(p -> PatientResponse.build(p, findLastPatientDiagnosisAsString(p.getId()))).collect(Collectors.toList());
+            return patients.stream().map(p -> PatientResponse.buildPatientSummary(p, findLastPatientDiagnosisAsString(p.getId()))).collect(Collectors.toList());
         }
 
         return new ArrayList<>();
     }
 
-    public PatientEntity getPatientDetails(UUID doctorId, UUID patientId) throws NotFoundException {
+    public PatientResponse getPatientDetails(UUID doctorId, UUID patientId) throws NotFoundException {
         if (doctorEntityService.existsById(doctorId) && existsById(patientId)) {
             Optional<PatientEntity> patientEntityOpt = patientEntityRepository.findByDoctorIdAndId(doctorId, patientId);
             if (patientEntityOpt.isPresent()) {
-                return patientEntityOpt.get();
+                return PatientResponse.buildPatientDetail(patientEntityOpt.get(), findLastPatientDiagnosisAsString(patientId));
             }
         }
 
@@ -143,7 +143,7 @@ public class ManagePatientsService {
         }
 
         PatientEntity p = patientEntityRepository.findById(id).get();
-        return PatientResponse.build(p, findLastPatientDiagnosisAsString(p.getId()));
+        return PatientResponse.buildPatientSummary(p, findLastPatientDiagnosisAsString(p.getId()));
     }
 
     // ======================================================================================================== PROGRESS

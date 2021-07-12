@@ -20,20 +20,13 @@ public class PrescriptionEntity {
     @Column(name = "id")
     private UUID id;
 
-//    @Column(name = "doctor_id")
-//    private UUID doctorId;
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private DoctorEntity doctor;
 
-//    @Column(name = "patient_id")
-//    private UUID patientId;
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private PatientEntity patient;
-
-//    @Column(name = "diagnosis_id")
-//    private UUID diagnosisId;
 
     @ManyToOne
     @JoinColumn(name = "diagnosis_id")

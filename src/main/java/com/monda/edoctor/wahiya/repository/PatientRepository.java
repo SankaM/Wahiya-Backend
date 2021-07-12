@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -21,4 +22,6 @@ public interface PatientRepository extends JpaRepository<PatientEntity, UUID> {
     List<PatientEntity> findByUserNameContains(String username);
 
     List<PatientEntity> findByMobilePhoneContains(String mobilePhone);
+
+    Optional<PatientEntity> findByDoctorIdAndId(UUID doctorId, UUID patientId);
 }

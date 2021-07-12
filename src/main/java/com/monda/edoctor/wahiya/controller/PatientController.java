@@ -38,4 +38,10 @@ public class PatientController {
 
         return patientService.searchPatient(query, field);
     }
+
+    @GetMapping(value = "/doctors/{doctorId}/patients/{patientId}/details")
+    @ResponseStatus(code = HttpStatus.OK)
+    public PatientRes getPatientDetails(@PathVariable("doctorId") UUID doctorId, @PathVariable("patientId") UUID patientId) throws NotFoundException {
+        return patientService.getPatientDetails(doctorId, patientId);
+    }
 }

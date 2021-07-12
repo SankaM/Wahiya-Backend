@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
+import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.DiagnosisEntity;
 import com.monda.edoctor.wahiya.model.DosageEntity;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -82,6 +84,19 @@ public class PatientService {
         }
 
         return new ArrayList<>();
+    }
+
+    public PatientRes getPatientDetails(UUID doctorId, UUID patientId) throws NotFoundException {
+        doctorService.existsById(doctorId);
+        existsById(patientId);
+
+        Optional<PatientEntity> patientEntityOpt = patientRepository.findByDoctorIdAndId(doctorId, patientId);
+        if (patientEntityOpt.isPresent()) {
+            return PatientRes.buildDetail(patientEntityOpt.get(), findLastPatientDiagnosis(patientId));
+        }
+
+        log.error("Patient ID: {} not  assigned to Doctor ID: {}", patientId, doctorId);
+        throw new NoContentException("Patient not assign to doctor");
     }
 
     protected DiagnosisEntity findLastPatientDiagnosis(UUID patientId) {

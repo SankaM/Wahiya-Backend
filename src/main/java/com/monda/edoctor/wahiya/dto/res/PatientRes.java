@@ -61,7 +61,7 @@ public class PatientRes {
         return res;
     }
 
-    public static PatientRes buildDetail(PatientEntity p, String currentDiagnosis) {
+    public static PatientRes buildDetail(PatientEntity p, DiagnosisEntity currentDiagnosis) {
         PatientRes res = null;
 
         if (p != null) {
@@ -79,7 +79,7 @@ public class PatientRes {
             res.email = p.getEmail();
             res.imageUrl = p.getImageUrl();
             res.gender = p.getGender();
-            res.currentDiagnosis = currentDiagnosis;
+            res.currentDiagnosis = currentDiagnosis != null ? currentDiagnosis.getName() : null;
         }
 
         return res;

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "inventory", schema = "wahiya")
@@ -19,11 +20,17 @@ public class InventoryEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+//    @Column(name = "doctor_id")
+//    private UUID doctorId;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private DoctorEntity doctor;
 
-    @Column(name = "drug_id")
-    private UUID drugId;
+//    @Column(name = "drug_id")
+//    private UUID drugId;
+    @ManyToOne
+    @JoinColumn(name = "drug_id")
+    private DrugEntity drug;
 
     @Column(name = "available_units")
     private Double availableUnits;
@@ -39,4 +46,8 @@ public class InventoryEntity {
 
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
+
+    @OneToMany
+    @JoinColumn(name = "inventory_id")
+    private List<InventoryBatchEntity> inventoryBatchList;
 }

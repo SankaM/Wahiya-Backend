@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "prescription", schema = "wahiya")
@@ -19,14 +20,24 @@ public class PrescriptionEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+//    @Column(name = "doctor_id")
+//    private UUID doctorId;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private DoctorEntity doctor;
 
-    @Column(name = "patient_id")
-    private UUID patientId;
+//    @Column(name = "patient_id")
+//    private UUID patientId;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private PatientEntity patient;
 
-    @Column(name = "diagnosis_id")
-    private UUID diagnosisId;
+//    @Column(name = "diagnosis_id")
+//    private UUID diagnosisId;
+
+    @ManyToOne
+    @JoinColumn(name = "diagnosis_id")
+    private DiagnosisEntity diagnosis;
 
     @Column(name = "prescription_date")
     private LocalDateTime prescriptionDate;
@@ -45,4 +56,8 @@ public class PrescriptionEntity {
 
     @Column(name = "total_cost")
     private Double totalCost;
+
+    @OneToMany
+    @JoinColumn(name = "prescription_id")
+    private List<DosageEntity> dosageList;
 }

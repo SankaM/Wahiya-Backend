@@ -23,11 +23,13 @@ public class DosageEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "prescription_id")
-    private UUID prescriptionId;
+//    @Column(name = "prescription_id")
+//    private UUID prescriptionId;
 
-    @Column(name = "drug_id")
-    private UUID drugId;
+//    @Column(name = "drug_id")
+//    private UUID drugId;
+    @ManyToOne
+    private DrugEntity drug;
 
     @Column(name = "treatment_days")
     private Integer treatmentDays;

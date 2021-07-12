@@ -19,8 +19,8 @@ public class WorkHourEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+//    @Column(name = "doctor_id")
+//    private UUID doctorId;
 
     @Column(name = "day_of_week")
     @Enumerated(EnumType.STRING)

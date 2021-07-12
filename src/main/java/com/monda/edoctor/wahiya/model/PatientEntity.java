@@ -21,8 +21,11 @@ public class PatientEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+//    @Column(name = "doctor_id")
+//    private UUID doctorId;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private DoctorEntity doctor;
 
     @Column(name = "first_name")
     private String firstName;

@@ -1,4 +1,4 @@
-insert into wahiya.prescription (id, doctor_id, patient_id, diagnosis_id, prescription_date, notes, attachment_url, doctor_cost, drug_cost, total_cost)
+insert into wahiya.prescription (id, doctor_id, patient_id, diagnosis_id, prescription_date, notes, attachment_url, doctor_cost, drug_cost, total_cost, illness_severity)
 values
-('f3560a74-bfa8-0011-8529-0242ac130003', 'f3560a74-bfa8-11eb-8529-0242ac130003', 'f8edc42e-4b6f-4298-be7d-9024621a70cb', 'f3560a74-bfa8-0002-8529-0242ac130003', '2021-07-08', 'Some notes 1122334455', null, 10, 20, 30),
-('f3560a74-bfa8-0012-8529-0242ac130003', 'f3560a74-bfa8-11eb-8529-0242ac130003', 'f8edc42e-4b6f-4298-be7d-9024621a70cb', 'f3560a74-bfa8-0003-8529-0242ac130003', '2021-07-12', 'Some notes 1234567890', null, 15, 25, 40);
+('f3560a74-bfa8-0011-8529-0242ac130003', 'f3560a74-bfa8-11eb-8529-0242ac130003', 'f8edc42e-4b6f-4298-be7d-9024621a70cb', 'f3560a74-bfa8-0002-8529-0242ac130003', '2021-07-08', 'Some notes 1122334455', null, 10, 20, 30, 'LOW'),
+('f3560a74-bfa8-0012-8529-0242ac130003', 'f3560a74-bfa8-11eb-8529-0242ac130003', 'f8edc42e-4b6f-4298-be7d-9024621a70cb', 'f3560a74-bfa8-0003-8529-0242ac130003', '2021-07-12', 'Some notes 1234567890', null, 15, 25, 40, 'HIGH');

@@ -32,6 +32,10 @@ public class PrescriptionEntity {
     @JoinColumn(name = "diagnosis_id")
     private DiagnosisEntity diagnosis;
 
+    @Column(name = "illness_severity")
+    @Enumerated(EnumType.STRING)
+    private IllnessSeverity illnessSeverity;
+
     @Column(name = "prescription_date")
     private LocalDateTime prescriptionDate;
 

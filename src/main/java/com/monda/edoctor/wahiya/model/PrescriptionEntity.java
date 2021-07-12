@@ -15,6 +15,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrescriptionEntity {
+    public enum IllnessSeverity {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.dto.res;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.monda.edoctor.wahiya.model.DoctorEntity;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoginRes {
     private UUID doctorId;
 

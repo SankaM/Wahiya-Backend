@@ -2,6 +2,7 @@ package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.req.LoginReq;
 import com.monda.edoctor.wahiya.dto.res.LoginRes;
+import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.LoginException;
 import com.monda.edoctor.wahiya.model.DoctorEntity;
 import com.monda.edoctor.wahiya.service.LoginService;
@@ -20,8 +21,8 @@ public class LoginController {
 
     @PostMapping(value = "/doctor/login")
     @ResponseStatus(code = HttpStatus.OK)
-    public LoginRes login(@RequestBody LoginReq loginReq) throws LoginException {
+    public ResponseWrapper<LoginRes> login(@RequestBody LoginReq loginReq) throws LoginException {
         DoctorEntity doctorEntity = loginService.validateDoctorLogin(loginReq);
-        return LoginRes.build(doctorEntity);
+        return new ResponseWrapper<>(true, null, LoginRes.build(doctorEntity));
     }
 }

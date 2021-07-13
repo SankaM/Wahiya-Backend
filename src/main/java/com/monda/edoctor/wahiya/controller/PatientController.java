@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
+import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.exception.WrongParameterException;
 import com.monda.edoctor.wahiya.service.PatientService;
@@ -22,13 +23,13 @@ public class PatientController {
 
     @GetMapping(value = "/doctors/{doctorId}/patients/summary")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PatientRes> getPatientsSummaryOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
-        return patientService.getPatientsOfDoctor(doctorId);
+    public ResponseWrapper<List<PatientRes>> getPatientsSummaryOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
+        return new ResponseWrapper<>(true, null, patientService.getPatientsOfDoctor(doctorId));
     }
 
     @GetMapping(value = "/patients/search")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<PatientRes> searchPatient(@RequestParam("query") String query, @RequestParam("field") String fieldAsString) throws WrongParameterException {
+    public ResponseWrapper<List<PatientRes>> searchPatient(@RequestParam("query") String query, @RequestParam("field") String fieldAsString) throws WrongParameterException {
         PatientService.SearchPatientField field;
         try {
             field = PatientService.SearchPatientField.valueOf(fieldAsString);
@@ -36,12 +37,12 @@ public class PatientController {
             throw new WrongParameterException("Wrong field value");
         }
 
-        return patientService.searchPatient(query, field);
+        return new ResponseWrapper<>(true, null, patientService.searchPatient(query, field));
     }
 
     @GetMapping(value = "/doctors/{doctorId}/patients/{patientId}/details")
     @ResponseStatus(code = HttpStatus.OK)
-    public PatientRes getPatientDetails(@PathVariable("doctorId") UUID doctorId, @PathVariable("patientId") UUID patientId) throws NotFoundException {
-        return patientService.getPatientDetails(doctorId, patientId);
+    public ResponseWrapper<PatientRes> getPatientDetails(@PathVariable("doctorId") UUID doctorId, @PathVariable("patientId") UUID patientId) throws NotFoundException {
+        return new ResponseWrapper<>(true, null, patientService.getPatientDetails(doctorId, patientId));
     }
 }

@@ -51,7 +51,7 @@ public class DoctorEntity {
     private String address3;
 
     @Column(name = "zip_code")
-    private String zip_code;
+    private String zipCode;
 
     @Column(name = "image_url")
     private String imageUrl;

@@ -23,7 +23,7 @@ public class LoginRes {
 
     private String imageUrl;
 
-    public static LoginRes build(DoctorEntity d) {
+    public static LoginRes buildDetail(DoctorEntity d) {
         LoginRes res = null;
 
         if (d != null) {

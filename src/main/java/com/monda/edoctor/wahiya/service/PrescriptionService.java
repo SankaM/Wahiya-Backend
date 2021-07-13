@@ -28,7 +28,7 @@ public class PrescriptionService {
 
         return prescriptionEntityList
                 .stream()
-                .map(prescription -> PrescriptionRes.buildSimple(prescription))
+                .map(prescription -> PrescriptionRes.buildDetail(prescription))
                 .collect(Collectors.toList());
     }
 }

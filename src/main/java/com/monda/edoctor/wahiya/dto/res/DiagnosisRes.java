@@ -17,7 +17,7 @@ public class DiagnosisRes {
 
     private String name;
 
-    public static DiagnosisRes build(DiagnosisEntity diagnosis) {
+    public static DiagnosisRes buildDetail(DiagnosisEntity diagnosis) {
         DiagnosisRes res = null;
 
         if(diagnosis != null) {

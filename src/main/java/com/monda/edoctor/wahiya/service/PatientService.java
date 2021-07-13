@@ -51,7 +51,7 @@ public class PatientService {
 
         List<PatientEntity> patients = patientRepository.findByDoctorIdAndIsActive(doctorId, true);
         if (!patients.isEmpty()) {
-            return patients.stream().map(p -> PatientRes.buildSummary(p, findLastPatientDiagnosis(p.getId()))).collect(Collectors.toList());
+            return patients.stream().map(p -> PatientRes.buildSimple(p, findLastPatientDiagnosis(p.getId()))).collect(Collectors.toList());
         }
 
         return new ArrayList<>();
@@ -80,7 +80,7 @@ public class PatientService {
         }
 
         if (!patients.isEmpty()) {
-            return patients.stream().map(p -> PatientRes.buildSummary(p, findLastPatientDiagnosis(p.getId()))).collect(Collectors.toList());
+            return patients.stream().map(p -> PatientRes.buildSimple(p, findLastPatientDiagnosis(p.getId()))).collect(Collectors.toList());
         }
 
         return new ArrayList<>();

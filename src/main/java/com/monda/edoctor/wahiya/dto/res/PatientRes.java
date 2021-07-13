@@ -44,7 +44,7 @@ public class PatientRes {
 
     private String currentDiagnosis;
 
-    public static PatientRes buildSummary(PatientEntity p, DiagnosisEntity currentDiagnosis) {
+    public static PatientRes buildSimple(PatientEntity p, DiagnosisEntity currentDiagnosis) {
         PatientRes res = null;
 
         if (p != null) {
@@ -67,7 +67,7 @@ public class PatientRes {
         if (p != null) {
             res = new PatientRes();
             res.id = p.getId();
-            res.doctor = DoctorRes.buildSummary(p.getDoctor());
+            res.doctor = DoctorRes.buildSimple(p.getDoctor());
             res.firstName = p.getFirstName();
             res.lastName = p.getLastName();
             res.birthDate = p.getBirthDate();

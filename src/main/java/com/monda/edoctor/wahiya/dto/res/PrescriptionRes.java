@@ -39,7 +39,7 @@ public class PrescriptionRes {
 
     private List<DosageRes> dosageList;
 
-    public static PrescriptionRes buildSimple(PrescriptionEntity prescription) {
+    public static PrescriptionRes buildDetail(PrescriptionEntity prescription) {
         PrescriptionRes res = null;
 
         if(prescription != null) {
@@ -49,8 +49,8 @@ public class PrescriptionRes {
 
             res = new PrescriptionRes();
             res.id = prescription.getId();
-            res.doctor = DoctorRes.buildSummary(prescription.getDoctor());
-            res.diagnosis = DiagnosisRes.build(prescription.getDiagnosis());
+            res.doctor = DoctorRes.buildSimple(prescription.getDoctor());
+            res.diagnosis = DiagnosisRes.buildDetail(prescription.getDiagnosis());
             res.illnessSeverity = prescription.getIllnessSeverity();
             res.prescriptionDate = prescription.getPrescriptionDate() != null ? prescription.getPrescriptionDate().toString() : null;
             res.notes = prescription.getNotes();

@@ -23,6 +23,6 @@ public class LoginController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<LoginRes> login(@RequestBody LoginReq loginReq) throws LoginException {
         DoctorEntity doctorEntity = loginService.validateDoctorLogin(loginReq);
-        return new ResponseWrapper<>(true, null, LoginRes.build(doctorEntity));
+        return new ResponseWrapper<>(true, null, LoginRes.buildDetail(doctorEntity));
     }
 }

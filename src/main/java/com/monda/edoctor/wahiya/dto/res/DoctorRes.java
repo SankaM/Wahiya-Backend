@@ -21,7 +21,7 @@ public class DoctorRes {
 
     private String imageURL;
 
-    public static DoctorRes buildSummary(DoctorEntity d) {
+    public static DoctorRes buildSimple(DoctorEntity d) {
         DoctorRes res = null;
 
         if(d != null) {

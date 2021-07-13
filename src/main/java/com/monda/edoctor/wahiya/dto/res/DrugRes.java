@@ -27,7 +27,7 @@ public class DrugRes {
 
     private String imageUrl;
 
-    public static DrugRes buildSummary(DrugEntity drug) {
+    public static DrugRes buildSimple(DrugEntity drug) {
         DrugRes res = null;
 
         if(drug != null) {

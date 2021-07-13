@@ -34,6 +34,8 @@ public class DrugRes {
             res = new DrugRes();
             res.id = drug.getId();
             res.name = drug.getName();
+            res.measurement = drug.getMeasurement();
+            res.measurementUnit = drug.getMeasurementUnit();
         }
 
         return res;

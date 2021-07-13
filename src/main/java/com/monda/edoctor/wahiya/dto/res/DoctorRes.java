@@ -19,7 +19,7 @@ public class DoctorRes {
 
     private String profile;
 
-    private String imageURL;
+    private String imageUrl;
 
     public static DoctorRes buildSimple(DoctorEntity d) {
         DoctorRes res = null;
@@ -29,7 +29,7 @@ public class DoctorRes {
             res.id = d.getId();
             res.name = d.getName();
             res.profile = d.getProfile();
-            res.imageURL = d.getImageUrl();
+            res.imageUrl = d.getImageUrl();
         }
 
         return res;

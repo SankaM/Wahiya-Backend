@@ -1,12 +1,11 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.dto.req.PatientRegistrationReq;
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
-import com.monda.edoctor.wahiya.model.DiagnosisEntity;
-import com.monda.edoctor.wahiya.model.DosageEntity;
-import com.monda.edoctor.wahiya.model.PatientEntity;
-import com.monda.edoctor.wahiya.model.PrescriptionEntity;
+import com.monda.edoctor.wahiya.model.*;
+import com.monda.edoctor.wahiya.repository.DoctorRepository;
 import com.monda.edoctor.wahiya.repository.PatientRepository;
 import com.monda.edoctor.wahiya.repository.PrescriptionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +31,9 @@ public class PatientService {
 
     @Autowired
     private DoctorService doctorService;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     public static enum SearchPatientField {
         NAME, USERNAME, EMAIL, MOBILE_PHONE
@@ -97,6 +99,15 @@ public class PatientService {
 
         log.error("Patient ID: {} not  assigned to Doctor ID: {}", patientId, doctorId);
         throw new NoContentException("Patient not assign to doctor");
+    }
+
+    public void registerPatient(UUID doctorId, PatientRegistrationReq req) throws NotFoundException {
+        doctorService.existsById(doctorId);
+
+        PatientEntity patient = req.buildEntity();
+        patient.setDoctor(doctorRepository.getOne(doctorId));
+
+        patientRepository.save(patient);
     }
 
     protected DiagnosisEntity findLastPatientDiagnosis(UUID patientId) {

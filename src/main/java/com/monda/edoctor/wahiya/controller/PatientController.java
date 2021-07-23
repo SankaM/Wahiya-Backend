@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.controller;
 
+import com.monda.edoctor.wahiya.dto.req.PatientRegistrationReq;
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -44,5 +45,11 @@ public class PatientController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<PatientRes> getPatientDetails(@PathVariable("doctorId") UUID doctorId, @PathVariable("patientId") UUID patientId) throws NotFoundException {
         return new ResponseWrapper<>(true, null, patientService.getPatientDetails(doctorId, patientId));
+    }
+
+    @PostMapping(value = "/doctors/{doctorId}/patients/register")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public void registerPatient(@PathVariable("doctorId") UUID doctorId, @RequestBody PatientRegistrationReq req) throws NotFoundException {
+        patientService.registerPatient(doctorId, req);
     }
 }

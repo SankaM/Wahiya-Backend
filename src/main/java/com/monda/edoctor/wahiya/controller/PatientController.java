@@ -3,6 +3,7 @@ package com.monda.edoctor.wahiya.controller;
 import com.monda.edoctor.wahiya.dto.req.PatientRegistrationReq;
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
+import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.exception.WrongParameterException;
 import com.monda.edoctor.wahiya.service.PatientService;
@@ -49,7 +50,9 @@ public class PatientController {
 
     @PostMapping(value = "/doctors/{doctorId}/patients/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void registerPatient(@PathVariable("doctorId") UUID doctorId, @RequestBody PatientRegistrationReq req) throws NotFoundException {
+    public ResponseWrapper registerPatient(@PathVariable("doctorId") UUID doctorId, @RequestBody PatientRegistrationReq req) throws NotFoundException, DuplicateContentException {
         patientService.registerPatient(doctorId, req);
+
+        return new ResponseWrapper(true, null, null);
     }
 }

@@ -19,9 +19,6 @@ public class InventoryBatchEntity {
     @Column(name = "id")
     private UUID id;
 
-//    @Column(name = "inventory_id")
-//    private UUID inventoryId;
-
     @Column(name = "unit_buy_price")
     private Double unitBuyPrice;
 

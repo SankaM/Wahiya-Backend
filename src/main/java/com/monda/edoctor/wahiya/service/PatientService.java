@@ -2,6 +2,7 @@ package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.dto.req.PatientRegistrationReq;
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
+import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.*;
@@ -101,10 +102,23 @@ public class PatientService {
         throw new NoContentException("Patient not assign to doctor");
     }
 
-    public void registerPatient(UUID doctorId, PatientRegistrationReq req) throws NotFoundException {
+    public void registerPatient(UUID doctorId, PatientRegistrationReq req) throws NotFoundException, DuplicateContentException {
         doctorService.existsById(doctorId);
 
+        if(req.getMobilePhone() != null && patientRepository.findByMobilePhone(req.getMobilePhone()) != null) {
+            throw new DuplicateContentException("Patient with mobile phone " + req.getMobilePhone() + " already exist");
+        }
+
+        if(req.getEmail() != null && patientRepository.findByEmail(req.getEmail()) != null) {
+            throw new DuplicateContentException("Patient with email " + req.getEmail() + " already exist");
+        }
+
+        if(req.getUserName() != null && patientRepository.findByUserName(req.getUserName()) != null) {
+            throw new DuplicateContentException("Patient with username " + req.getUserName() + " already exist");
+        }
+
         PatientEntity patient = req.buildEntity();
+        patient.setIsActive(true);
         patient.setDoctor(doctorRepository.getOne(doctorId));
 
         patientRepository.save(patient);

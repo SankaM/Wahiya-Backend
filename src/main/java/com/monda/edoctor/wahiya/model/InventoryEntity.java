@@ -20,14 +20,10 @@ public class InventoryEntity {
     @Column(name = "id")
     private UUID id;
 
-//    @Column(name = "doctor_id")
-//    private UUID doctorId;
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private DoctorEntity doctor;
 
-//    @Column(name = "drug_id")
-//    private UUID drugId;
     @ManyToOne
     @JoinColumn(name = "drug_id")
     private DrugEntity drug;

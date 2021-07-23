@@ -24,4 +24,10 @@ public interface PatientRepository extends JpaRepository<PatientEntity, UUID> {
     List<PatientEntity> findByMobilePhoneContains(String mobilePhone);
 
     Optional<PatientEntity> findByDoctorIdAndId(UUID doctorId, UUID patientId);
+
+    PatientEntity findByUserName(String userName);
+
+    PatientEntity findByMobilePhone(String mobilePhone);
+
+    PatientEntity findByEmail(String email);
 }

@@ -23,14 +23,10 @@ public class AppointmentEntity {
     @Column(name = "id")
     private UUID id;
 
-//    @Column(name = "work_hour_id")
-//    private UUID workHourId;
     @ManyToOne
     @JoinColumn(name = "work_hour_id")
     private WorkHourEntity workHour;
 
-//    @Column(name = "patient_id")
-//    private UUID patientId;
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private PatientEntity patient;

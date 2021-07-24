@@ -1,11 +1,20 @@
 package com.monda.edoctor.wahiya.repository;
 
 import com.monda.edoctor.wahiya.model.InventoryEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface InventoryRepository extends JpaRepository<InventoryEntity, UUID> {
+public interface InventoryRepository extends PagingAndSortingRepository<InventoryEntity, UUID> {
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND lower(i.drug.name) LIKE lower(concat('%',:drugName,'%'))")
+    List<InventoryEntity> findByDrugName(UUID doctorId, String drugName, Pageable pageable);
+
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId")
+    List<InventoryEntity> find(UUID doctorId, Pageable pageable);
 }

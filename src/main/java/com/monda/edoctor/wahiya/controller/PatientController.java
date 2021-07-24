@@ -31,7 +31,9 @@ public class PatientController {
 
     @GetMapping(value = "/patients/search")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseWrapper<List<PatientRes>> searchPatient(@RequestParam("query") String query, @RequestParam("field") String fieldAsString) throws WrongParameterException {
+    public ResponseWrapper<List<PatientRes>> searchPatient(@RequestParam("query") String query,
+                                                           @RequestParam("field") String fieldAsString) throws WrongParameterException {
+
         PatientService.SearchPatientField field;
         try {
             field = PatientService.SearchPatientField.valueOf(fieldAsString);
@@ -44,13 +46,17 @@ public class PatientController {
 
     @GetMapping(value = "/doctors/{doctorId}/patients/{patientId}/details")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseWrapper<PatientRes> getPatientDetails(@PathVariable("doctorId") UUID doctorId, @PathVariable("patientId") UUID patientId) throws NotFoundException {
+    public ResponseWrapper<PatientRes> getPatientDetails(@PathVariable("doctorId") UUID doctorId,
+                                                         @PathVariable("patientId") UUID patientId) throws NotFoundException {
+
         return new ResponseWrapper<>(true, null, patientService.getPatientDetails(doctorId, patientId));
     }
 
     @PostMapping(value = "/doctors/{doctorId}/patients/register")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseWrapper registerPatient(@PathVariable("doctorId") UUID doctorId, @RequestBody PatientRegistrationReq req) throws NotFoundException, DuplicateContentException {
+    public ResponseWrapper registerPatient(@PathVariable("doctorId") UUID doctorId,
+                                           @RequestBody PatientRegistrationReq req) throws NotFoundException, DuplicateContentException {
+
         patientService.registerPatient(doctorId, req);
 
         return new ResponseWrapper(true, null, null);

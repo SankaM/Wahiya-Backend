@@ -15,6 +15,12 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND lower(i.drug.name) LIKE lower(concat('%',:drugName,'%'))")
     List<InventoryEntity> findByDrugName(UUID doctorId, String drugName, Pageable pageable);
 
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND lower(i.drug.type) LIKE lower(concat('%',:drugType,'%'))")
+    List<InventoryEntity> findByDrugType(UUID doctorId, String drugType, Pageable pageable);
+
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND i.drug.measurement = :measurement")
+    List<InventoryEntity> findByDrugMeasurement(UUID doctorId, Double measurement, Pageable pageable);
+
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId")
     List<InventoryEntity> find(UUID doctorId, Pageable pageable);
 }

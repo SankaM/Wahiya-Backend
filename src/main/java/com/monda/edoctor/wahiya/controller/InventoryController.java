@@ -1,9 +1,11 @@
 package com.monda.edoctor.wahiya.controller;
 
+import com.monda.edoctor.wahiya.dto.res.DrugRes;
 import com.monda.edoctor.wahiya.dto.res.InventoryRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.exception.WrongParameterException;
+import com.monda.edoctor.wahiya.service.DrugService;
 import com.monda.edoctor.wahiya.service.InventoryService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -22,6 +24,9 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
+    @Autowired
+    private DrugService drugService;
+
     @GetMapping(value = "/doctors/{doctorId}/inventory")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<List<InventoryRes>> getInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId,
@@ -39,6 +44,13 @@ public class InventoryController {
             }
         }
         val data = inventoryService.getInventoryListOfDoctor(doctorId, query, field, page, itemPerPage);
-        return new ResponseWrapper(true, null, data);
+        return new ResponseWrapper<List<InventoryRes>>(true, null, data);
+    }
+
+    @GetMapping(value = "/drug")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper<List<DrugRes>> searchDrug(@RequestParam(value = "name", required = false) String name) {
+        val data = drugService.findDrugByName(name);
+        return new ResponseWrapper<List<DrugRes>>(true, null, data);
     }
 }

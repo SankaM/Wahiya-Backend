@@ -42,6 +42,6 @@ public class InventoryService {
             inventoryEntityList = inventoryRepository.findByDrugMeasurement(doctorId, Double.parseDouble(query), PageRequest.of(pageNumber, itemPerPage));
         }
 
-        return inventoryEntityList.stream().map(inventoryEntity -> InventoryRes.buildSimple(inventoryEntity)).collect(Collectors.toList());
+        return inventoryEntityList.stream().map(inventoryEntity -> InventoryRes.build(inventoryEntity)).collect(Collectors.toList());
     }
 }

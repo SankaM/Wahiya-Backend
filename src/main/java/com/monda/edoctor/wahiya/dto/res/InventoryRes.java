@@ -23,7 +23,7 @@ public class InventoryRes {
 
     private Boolean isAvailable = true;
 
-    public static InventoryRes buildSimple(InventoryEntity i) {
+    public static InventoryRes build(InventoryEntity i) {
         InventoryRes res = null;
 
         if(i != null) {

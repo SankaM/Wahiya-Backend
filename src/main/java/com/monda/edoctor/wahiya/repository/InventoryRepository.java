@@ -12,9 +12,11 @@ import java.util.UUID;
 
 @Repository
 public interface InventoryRepository extends PagingAndSortingRepository<InventoryEntity, UUID> {
+    // Todo: Low performance query. Find a way to tune-in the query
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND lower(i.drug.name) LIKE lower(concat('%',:drugName,'%'))")
     List<InventoryEntity> findByDrugName(UUID doctorId, String drugName, Pageable pageable);
 
+    // Todo: Low performance query. Find a way to tune-in the query
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND lower(i.drug.type) LIKE lower(concat('%',:drugType,'%'))")
     List<InventoryEntity> findByDrugType(UUID doctorId, String drugType, Pageable pageable);
 

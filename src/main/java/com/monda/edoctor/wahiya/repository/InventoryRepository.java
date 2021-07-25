@@ -8,6 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -25,4 +26,7 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
 
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId")
     List<InventoryEntity> find(UUID doctorId, Pageable pageable);
+
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND i.drug.id = :drugId")
+    Optional<InventoryEntity> findByDoctorIdAndDrugId(UUID doctorId, UUID drugId);
 }

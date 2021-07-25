@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.controller;
 
+import com.monda.edoctor.wahiya.dto.req.NewBatchInventoryReq;
 import com.monda.edoctor.wahiya.dto.res.DrugRes;
 import com.monda.edoctor.wahiya.dto.res.InventoryRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
@@ -24,9 +25,6 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    @Autowired
-    private DrugService drugService;
-
     @GetMapping(value = "/doctors/{doctorId}/inventory")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<List<InventoryRes>> getInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId,
@@ -47,10 +45,12 @@ public class InventoryController {
         return new ResponseWrapper<List<InventoryRes>>(true, null, data);
     }
 
-    @GetMapping(value = "/drug")
-    @ResponseStatus(code = HttpStatus.OK)
-    public ResponseWrapper<List<DrugRes>> searchDrug(@RequestParam(value = "name", required = false) String name) {
-        val data = drugService.findDrugByName(name);
-        return new ResponseWrapper<List<DrugRes>>(true, null, data);
+    @PostMapping(value = "/doctors/{doctorId}/inventory/batch")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseWrapper newBatchInventory(@PathVariable("doctorId") UUID doctorId,
+                                             @RequestBody NewBatchInventoryReq req) throws NotFoundException {
+        inventoryService.newBatchInventory(doctorId, req);
+
+        return new ResponseWrapper(true, null, null);
     }
 }

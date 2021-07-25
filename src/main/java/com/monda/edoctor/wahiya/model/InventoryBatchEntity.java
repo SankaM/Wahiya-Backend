@@ -3,7 +3,7 @@ package com.monda.edoctor.wahiya.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Table(name = "inventory_batch", schema = "wahiya")
@@ -19,6 +19,10 @@ public class InventoryBatchEntity {
     @Column(name = "id")
     private UUID id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "inventory_id")
+    private InventoryEntity inventory;
+
     @Column(name = "unit_buy_price")
     private Double unitBuyPrice;
 
@@ -29,8 +33,8 @@ public class InventoryBatchEntity {
     private Double unitCounts;
 
     @Column(name = "batch_date")
-    private LocalDateTime batchDate;
+    private LocalDate batchDate;
 
     @Column(name = "expiry_date")
-    private LocalDateTime expiryDate;
+    private LocalDate expiryDate;
 }

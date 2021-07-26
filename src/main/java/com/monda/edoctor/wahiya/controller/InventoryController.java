@@ -49,8 +49,17 @@ public class InventoryController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseWrapper newBatchInventory(@PathVariable("doctorId") UUID doctorId,
                                              @RequestBody NewBatchInventoryReq req) throws NotFoundException {
-        inventoryService.newBatchInventory(doctorId, req);
 
+        inventoryService.newBatchInventory(doctorId, req);
         return new ResponseWrapper(true, null, null);
+    }
+
+    @GetMapping(value = "/doctors/{doctorId}/inventory/{inventoryId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper<InventoryRes> getInventory(@PathVariable("doctorId") UUID doctorId,
+                                                      @PathVariable("inventoryId") UUID inventoryId) throws NotFoundException {
+
+        val data = inventoryService.getInventory(doctorId, inventoryId);
+        return new ResponseWrapper<>(true, null, data);
     }
 }

@@ -14,6 +14,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -44,6 +45,15 @@ public class InventoryService {
         NAME, TYPE, MEASUREMENT
     }
 
+    public boolean existsById(UUID id) throws NotFoundException {
+        if (!inventoryRepository.existsById(id)) {
+            log.error("Inventory ID not available : {}", id);
+            throw new NotFoundException("Inventory ID not available");
+        }
+
+        return true;
+    }
+
     public List<InventoryRes> getInventoryListOfDoctor(UUID doctorId, String query, SearchDrugField field, int pageNumber, int itemPerPage) throws NotFoundException {
         doctorService.existsById(doctorId);
 
@@ -59,7 +69,7 @@ public class InventoryService {
             inventoryEntityList = inventoryRepository.findByDrugMeasurement(doctorId, Double.parseDouble(query), PageRequest.of(pageNumber, itemPerPage));
         }
 
-        return inventoryEntityList.stream().map(inventoryEntity -> InventoryRes.build(inventoryEntity)).collect(Collectors.toList());
+        return inventoryEntityList.stream().map(inventoryEntity -> InventoryRes.buildSimple(inventoryEntity)).collect(Collectors.toList());
     }
 
     public void newBatchInventory(UUID doctorId, NewBatchInventoryReq req) throws NotFoundException {
@@ -105,5 +115,12 @@ public class InventoryService {
         // Update available unit of Inventory
         inventory.setAvailableUnits(inventory.getAvailableUnits() + inventoryBatch.getUnitCounts());
         inventoryRepository.save(inventory);
+    }
+
+    public InventoryRes getInventory(@PathVariable("doctorId") UUID doctorId, @PathVariable("inventoryId") UUID inventoryId) throws NotFoundException {
+        doctorService.existsById(doctorId);
+        existsById(inventoryId);
+
+        return InventoryRes.buildDetail(inventoryRepository.findById(inventoryId).get());
     }
 }

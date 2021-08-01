@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,39 +14,51 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(value = { "password" })
 public class PatientEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private DoctorEntity doctor;
 
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "user_name", unique = true)
-    private String userName;
+    @Column(name = "last_name")
+    private String lastName;
 
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "email", unique = true)
-    private String email;
+    @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
-    @Column(name = "mobile", unique = true)
-    private String mobile;
-
-    @Column(name = "health_profile")
+    @Column(name = "mobile_phone", unique = true)
+    private String mobilePhone;
+    
+    @Column(name = "health_profile", length = 500)
     private String healthProfile;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+    @Column(name = "nic")
+    private String nic;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "user_name", unique = true)
+    private String userName;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
-    private String imageUrl;
+    @Column(name = "email", unique = true)
+    private String email;
 }

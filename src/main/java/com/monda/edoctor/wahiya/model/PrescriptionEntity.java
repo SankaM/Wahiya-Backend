@@ -2,11 +2,9 @@ package com.monda.edoctor.wahiya.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "prescription", schema = "wahiya")
@@ -17,17 +15,52 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrescriptionEntity {
+    public enum IllnessSeverity {
+        LOW,
+        MEDIUM,
+        HIGH
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "doctor_id")
-    private UUID doctorId;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private DoctorEntity doctor;
 
-    @Column(name = "patient_id")
-    private UUID patientId;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private PatientEntity patient;
 
-    @Column(name = "issued_date")
-    private LocalDateTime issuedDate;
+    @ManyToOne
+    @JoinColumn(name = "diagnosis_id")
+    private DiagnosisEntity diagnosis;
+
+    @Column(name = "illness_severity")
+    @Enumerated(EnumType.STRING)
+    private IllnessSeverity illnessSeverity;
+
+    @Column(name = "prescription_date")
+    private LocalDateTime prescriptionDate;
+
+    @Column(name = "notes")
+    private String notes;
+
+    @Column(name = "attachment_url")
+    private String attachmentUrl;
+
+    @Column(name = "doctor_cost")
+    private Double doctorCost;
+
+    @Column(name = "drug_cost")
+    private Double drugCost;
+
+    @Column(name = "total_cost")
+    private Double totalCost;
+
+    @OneToMany
+    @JoinColumn(name = "prescription_id")
+    private List<DosageEntity> dosageList;
 }

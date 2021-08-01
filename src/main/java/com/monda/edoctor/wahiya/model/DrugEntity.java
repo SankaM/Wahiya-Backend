@@ -3,8 +3,6 @@ package com.monda.edoctor.wahiya.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Table(name = "drug", schema = "wahiya")
@@ -15,40 +13,37 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DrugEntity {
+    public enum DrugType {
+        // Reff: https://www.gosh.nhs.uk/conditions-and-treatments/medicines-information/types-medicines/
+        LIQUID, TABLET, CAPSULE, CREAMS, SUPPOSITORIES, DROPS, INHALER, INJECTION, PATCHES, BUCCAL,
+    }
+
+    public enum MeasurementUnit {
+        MG, ML,
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="drug_id")
-    private UUID drugId;
+    @Column(name = "id")
+    private UUID id;
 
-    @Column(name="name")
+    @Column(name = "name", unique = true)
     private String name;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="expiry_date")
-    private LocalDate expiryDate;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private DrugType type;
 
-    @Column(name="available_units")
-    private Double availableUnits;
+    @Column(name = "measurement")
+    private Double measurement;
 
-    @Column(name="unit")
-    private String unit;
+    @Column(name = "measurement_unit")
+    @Enumerated(EnumType.STRING)
+    private MeasurementUnit measurementUnit;
 
-    @Column(name="unit_price")
-    private Double unitPrice;
-
-    @Column(name="image_link")
-    private String imageLink;
-
-    @Column(name="is_available")
-    private Boolean isAvailable;
-
-    public enum UpdateType {
-        ADD,
-        SET,
-        DEDUCT
-    }
-
+    @Column(name = "image_url")
+    private String imageUrl;
 }

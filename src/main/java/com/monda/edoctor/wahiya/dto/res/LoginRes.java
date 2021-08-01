@@ -1,0 +1,39 @@
+package com.monda.edoctor.wahiya.dto.res;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.monda.edoctor.wahiya.model.DoctorEntity;
+import lombok.*;
+
+import java.util.UUID;
+
+@Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class LoginRes {
+    private UUID doctorId;
+
+    private String doctorName;
+
+    private String userName;
+
+    private String location;
+
+    private String imageUrl;
+
+    public static LoginRes buildDetail(DoctorEntity d) {
+        LoginRes res = null;
+
+        if (d != null) {
+            res = new LoginRes();
+            res.doctorId = d.getId();
+            res.doctorName = d.getName();
+            res.location = d.getAddress3();
+            res.imageUrl = d.getImageUrl();
+        }
+
+        return res;
+    }
+}

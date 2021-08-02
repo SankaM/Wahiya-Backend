@@ -1,5 +1,6 @@
 package com.monda.edoctor.wahiya.controller;
 
+import com.monda.edoctor.wahiya.dto.res.DiagnosisRes;
 import com.monda.edoctor.wahiya.dto.res.PrescriptionRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -24,5 +25,10 @@ public class PrescriptionController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<List<PrescriptionRes>> getPatientMedicalHistory(@PathVariable("patientId") UUID patientId) throws NotFoundException {
         return new ResponseWrapper<>(true, null, prescriptionService.retrievePrescriptions(patientId));
+    }
+
+    @GetMapping(value ="/diagnosis")
+    public ResponseWrapper<List<DiagnosisRes>> getDiagnosis() {
+        return new ResponseWrapper<>(true, null, prescriptionService.retrieveDiagnosis());
     }
 }

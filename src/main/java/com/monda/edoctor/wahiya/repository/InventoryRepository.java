@@ -29,4 +29,7 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
 
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND i.drug.id = :drugId")
     Optional<InventoryEntity> findByDoctorIdAndDrugId(UUID doctorId, UUID drugId);
+
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId ORDER BY i.drug.name")
+    List<InventoryEntity> findAllByDoctorId(UUID doctorId);
 }

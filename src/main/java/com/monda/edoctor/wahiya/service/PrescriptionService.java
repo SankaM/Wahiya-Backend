@@ -1,11 +1,15 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.dto.res.DiagnosisRes;
 import com.monda.edoctor.wahiya.dto.res.PrescriptionRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
+import com.monda.edoctor.wahiya.model.DiagnosisEntity;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
+import com.monda.edoctor.wahiya.repository.DiagnosisRepository;
 import com.monda.edoctor.wahiya.repository.PrescriptionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +25,9 @@ public class PrescriptionService {
     @Autowired
     private PrescriptionRepository prescriptionRepository;
 
+    @Autowired
+    private DiagnosisRepository diagnosisRepository;
+
     public List<PrescriptionRes> retrievePrescriptions(UUID patientId) throws NotFoundException {
         patientService.existsById(patientId);
 
@@ -29,6 +36,15 @@ public class PrescriptionService {
         return prescriptionEntityList
                 .stream()
                 .map(prescription -> PrescriptionRes.buildDetail(prescription))
+                .collect(Collectors.toList());
+    }
+
+    public List<DiagnosisRes> retrieveDiagnosis() {
+        List<DiagnosisEntity> diagnosisEntityList = diagnosisRepository.findAll(Sort.by("name").ascending());
+
+        return diagnosisEntityList
+                .stream()
+                .map(diagnosis -> DiagnosisRes.buildDetail(diagnosis))
                 .collect(Collectors.toList());
     }
 }

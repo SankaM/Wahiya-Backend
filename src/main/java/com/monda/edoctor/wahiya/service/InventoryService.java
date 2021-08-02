@@ -72,6 +72,14 @@ public class InventoryService {
         return inventoryEntityList.stream().map(inventoryEntity -> InventoryRes.buildSimple(inventoryEntity)).collect(Collectors.toList());
     }
 
+    public List<InventoryRes> getAllInventoryListOfDoctor(UUID doctorId) throws NotFoundException {
+        doctorService.existsById(doctorId);
+
+        List<InventoryEntity> inventoryEntityList = inventoryRepository.findAllByDoctorId(doctorId);
+
+        return inventoryEntityList.stream().map(inventoryEntity -> InventoryRes.buildSimple(inventoryEntity)).collect(Collectors.toList());
+    }
+
     public void newBatchInventory(UUID doctorId, NewBatchInventoryReq req) throws NotFoundException {
         doctorService.existsById(doctorId);
 

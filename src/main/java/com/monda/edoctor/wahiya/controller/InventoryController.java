@@ -1,12 +1,10 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.req.NewBatchInventoryReq;
-import com.monda.edoctor.wahiya.dto.res.DrugRes;
 import com.monda.edoctor.wahiya.dto.res.InventoryRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.exception.WrongParameterException;
-import com.monda.edoctor.wahiya.service.DrugService;
 import com.monda.edoctor.wahiya.service.InventoryService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -42,6 +40,14 @@ public class InventoryController {
             }
         }
         val data = inventoryService.getInventoryListOfDoctor(doctorId, query, field, page, itemPerPage);
+        return new ResponseWrapper<List<InventoryRes>>(true, null, data);
+    }
+
+    @GetMapping(value = "/doctors/{doctorId}/inventory/all")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper<List<InventoryRes>> getAllInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
+
+        val data = inventoryService.getAllInventoryListOfDoctor(doctorId);
         return new ResponseWrapper<List<InventoryRes>>(true, null, data);
     }
 

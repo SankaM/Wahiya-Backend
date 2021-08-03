@@ -1,7 +1,6 @@
 package com.monda.edoctor.wahiya.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.monda.edoctor.wahiya.Config;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import lombok.*;
 
@@ -51,6 +50,7 @@ public class PrescriptionRes {
             res = new PrescriptionRes();
             res.id = prescription.getId();
             res.doctor = DoctorRes.buildSimple(prescription.getDoctor());
+            res.patient = PatientRes.buildSimple(prescription.getPatient(), null);
             res.diagnosis = DiagnosisRes.buildDetail(prescription.getDiagnosis());
             res.illnessSeverity = prescription.getIllnessSeverity();
             res.prescriptionDate = prescription.getPrescriptionDate() != null ? prescription.getPrescriptionDate().toString() : null;

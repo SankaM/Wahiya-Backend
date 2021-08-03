@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.monda.edoctor.wahiya.Config;
 import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import lombok.*;
 
@@ -59,6 +60,7 @@ public class PrescriptionRes {
             res.drugCost = prescription.getDrugCost();
             res.totalCost = prescription.getTotalCost();
             res.dosageList = dosageList;
+            res.attachmentUrl = prescription.getAttachmentUrl();
         }
 
         return res;

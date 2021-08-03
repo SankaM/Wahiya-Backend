@@ -41,7 +41,7 @@ public class PrescriptionController {
     public ResponseWrapper<PrescriptionRes> newPrescription(@PathVariable("doctorId") UUID doctorId,
                                 @PathVariable("patientId") UUID patientId,
                                 @RequestPart("data") NewPrescriptionReq req,
-                                @RequestPart("file") MultipartFile multipartFile) throws NotFoundException{
+                                @RequestPart(value = "fileAttachment", required = false) MultipartFile multipartFile) throws NotFoundException{
 
         return new ResponseWrapper<>(true, null, prescriptionService.newPrescription(doctorId, patientId, req, multipartFile));
     }

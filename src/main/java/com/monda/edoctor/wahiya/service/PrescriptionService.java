@@ -92,7 +92,10 @@ public class PrescriptionService {
         DoctorEntity doctor = doctorRepository.getOne(doctorId);
         PatientEntity patient = patientRepository.getOne(patientId);
         DiagnosisEntity diagnosis = diagnosisRepository.getOne(req.getDiagnosisId());
-        String fileName = convertMultipartToFile(attachmentMultipartFile, UUID.randomUUID().toString());
+        String fileName = null;
+        if(attachmentMultipartFile != null) {
+            fileName = convertMultipartToFile(attachmentMultipartFile, UUID.randomUUID().toString());
+        }
 
         val prescription = PrescriptionEntity.builder()
                 .doctor(doctor)

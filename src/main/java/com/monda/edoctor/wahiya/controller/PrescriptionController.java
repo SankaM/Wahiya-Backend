@@ -7,6 +7,7 @@ import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.service.PrescriptionService;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,5 +51,16 @@ public class PrescriptionController {
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<PrescriptionRes> getPrescription(@PathVariable UUID prescriptionId) throws NotFoundException {
         return new ResponseWrapper<>(true, null, prescriptionService.retrievePrescription(prescriptionId));
+    }
+
+    @GetMapping(value = "/doctors/{doctorId}/prescription")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper<List<PrescriptionRes>> getInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId,
+                                                                        @RequestParam(value = "query", required = false) String query,
+                                                                        @RequestParam("page") int page,
+                                                                        @RequestParam("itemPerPage") int itemPerPage) throws NotFoundException {
+
+        val data = prescriptionService.getPrescriptionListOfDoctor(doctorId, query, page, itemPerPage);
+        return new ResponseWrapper<List<PrescriptionRes>>(true, null, data);
     }
 }

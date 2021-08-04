@@ -11,6 +11,7 @@ import lombok.val;
 import lombok.var;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -153,5 +155,19 @@ public class PrescriptionService {
         }
 
         return fileName;
+    }
+
+    public List<PrescriptionRes> getPrescriptionListOfDoctor(UUID doctorId, String patientName, int pageNumber, int itemPerPage) throws NotFoundException {
+        doctorService.existsById(doctorId);
+
+        List<PrescriptionEntity> result = new ArrayList<>();
+
+        if(patientName == null || patientName.isEmpty()) {
+            result = prescriptionRepository.findByDoctorId(doctorId, PageRequest.of(pageNumber, itemPerPage));
+        } else {
+            result = prescriptionRepository.findByDoctorIdAndPatientName(doctorId, patientName, PageRequest.of(pageNumber, itemPerPage));
+        }
+
+        return result.stream().map(prescriptionEntity -> PrescriptionRes.buildSimple(prescriptionEntity)).collect(Collectors.toList());
     }
 }

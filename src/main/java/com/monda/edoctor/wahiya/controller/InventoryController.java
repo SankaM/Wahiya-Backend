@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.req.NewBatchInventoryReq;
+import com.monda.edoctor.wahiya.dto.req.UpdateBatchInventoryReq;
 import com.monda.edoctor.wahiya.dto.res.InventoryRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
@@ -57,6 +58,16 @@ public class InventoryController {
                                              @RequestBody NewBatchInventoryReq req) throws NotFoundException {
 
         inventoryService.newBatchInventory(doctorId, req);
+        return new ResponseWrapper(true, null, null);
+    }
+
+    @PutMapping(value = "/doctors/{doctorId}/inventory/batch/{inventoryBatchId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper updateBatchInventory(@PathVariable("doctorId") UUID doctorId,
+                                                @PathVariable("inventoryBatchId") UUID inventoryBatchId,
+                                                @RequestBody UpdateBatchInventoryReq req) throws NotFoundException {
+
+        inventoryService.updateBatchInventory(doctorId, inventoryBatchId, req);
         return new ResponseWrapper(true, null, null);
     }
 

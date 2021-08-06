@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.dto.req.NewBatchInventoryReq;
+import com.monda.edoctor.wahiya.dto.req.UpdateBatchInventoryReq;
 import com.monda.edoctor.wahiya.dto.res.InventoryRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.InventoryBatchEntity;
@@ -49,6 +50,15 @@ public class InventoryService {
         if (!inventoryRepository.existsById(id)) {
             log.error("Inventory ID not available : {}", id);
             throw new NotFoundException("Inventory ID not available");
+        }
+
+        return true;
+    }
+
+    public boolean inventoryBatchExistsById(UUID id) throws NotFoundException {
+        if (!inventoryBatchRepository.existsById(id)) {
+            log.error("Inventory Batch ID not available : {}", id);
+            throw new NotFoundException("Inventory Batch ID not available");
         }
 
         return true;
@@ -107,6 +117,7 @@ public class InventoryService {
         inventory.setLastUpdated(LocalDateTime.now());
         inventory.setUnitSellPrice(req.getUnitSellPrice());
         inventory.setUnitPriceCurrency(req.getUnitSellCurrency());
+        inventory.setLastUpdated(LocalDateTime.now());
 
         // InventoryBatch entity
         InventoryBatchEntity inventoryBatch = InventoryBatchEntity.builder()
@@ -122,6 +133,31 @@ public class InventoryService {
 
         // Update available unit of Inventory
         inventory.setAvailableUnits(inventory.getAvailableUnits() + inventoryBatch.getUnitCounts());
+        inventoryRepository.save(inventory);
+    }
+
+    public void updateBatchInventory(UUID doctorId, UUID inventoryBatchId, UpdateBatchInventoryReq req) throws NotFoundException {
+        doctorService.existsById(doctorId);
+        inventoryBatchExistsById(inventoryBatchId);
+
+        // InventoryBatch
+        InventoryBatchEntity inventoryBatch = inventoryBatchRepository.getOne(inventoryBatchId);
+        double oldBatchUnitCounts = inventoryBatch.getUnitCounts();
+        inventoryBatch.setBatchDate(LocalDate.parse(req.getBatchDate()));
+        inventoryBatch.setExpiryDate(LocalDate.parse(req.getExpiryDate()));
+        inventoryBatch.setUnitPriceCurrency(req.getUnitBuyCurrency());
+        inventoryBatch.setUnitBuyPrice(req.getUnitBuyPrice());
+        inventoryBatch.setUnitCounts(req.getUnitCount());
+        inventoryBatchRepository.save(inventoryBatch);
+
+        // Inventory
+        InventoryEntity inventory = inventoryBatch.getInventory();
+        double oldAvailableUnits = inventory.getAvailableUnits();
+        double newAvailableUnits = oldAvailableUnits - oldBatchUnitCounts + req.getUnitCount();
+        inventory.setUnitPriceCurrency(req.getUnitSellCurrency());
+        inventory.setUnitSellPrice(req.getUnitSellPrice());
+        inventory.setAvailableUnits(newAvailableUnits);
+        inventory.setLastUpdated(LocalDateTime.now());
         inventoryRepository.save(inventory);
     }
 

@@ -23,6 +23,10 @@ public class DosageEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "prescription_id")
+    private PrescriptionEntity prescription;
+
     @ManyToOne
     private DrugEntity drug;
 

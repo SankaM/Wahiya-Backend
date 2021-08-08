@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface InventoryRepository extends PagingAndSortingRepository<InventoryEntity, UUID> {
+public interface InventoryRepository extends PagingAndSortingRepository<InventoryEntity, UUID>, JpaRepository<InventoryEntity, UUID> {
     // Todo: Low performance query. Find a way to tune-in the query
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND lower(i.drug.name) LIKE lower(concat('%',:drugName,'%'))")
     List<InventoryEntity> findByDrugName(UUID doctorId, String drugName, Pageable pageable);
@@ -29,4 +29,7 @@ public interface InventoryRepository extends PagingAndSortingRepository<Inventor
 
     @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId AND i.drug.id = :drugId")
     Optional<InventoryEntity> findByDoctorIdAndDrugId(UUID doctorId, UUID drugId);
+
+    @Query("SELECT i FROM InventoryEntity i WHERE i.doctor.id = :doctorId ORDER BY i.drug.name")
+    List<InventoryEntity> findAllByDoctorId(UUID doctorId);
 }

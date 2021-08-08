@@ -50,6 +50,7 @@ public class PrescriptionRes {
             res = new PrescriptionRes();
             res.id = prescription.getId();
             res.doctor = DoctorRes.buildSimple(prescription.getDoctor());
+            res.patient = PatientRes.buildSimple(prescription.getPatient(), null);
             res.diagnosis = DiagnosisRes.buildDetail(prescription.getDiagnosis());
             res.illnessSeverity = prescription.getIllnessSeverity();
             res.prescriptionDate = prescription.getPrescriptionDate() != null ? prescription.getPrescriptionDate().toString() : null;
@@ -59,6 +60,26 @@ public class PrescriptionRes {
             res.drugCost = prescription.getDrugCost();
             res.totalCost = prescription.getTotalCost();
             res.dosageList = dosageList;
+            res.attachmentUrl = prescription.getAttachmentUrl();
+        }
+
+        return res;
+    }
+
+    public static PrescriptionRes buildSimple(PrescriptionEntity prescription) {
+        PrescriptionRes res = null;
+
+        if(prescription != null) {
+            val dosageList = prescription.getDosageList() != null ?
+                    prescription.getDosageList().stream().map(dosage -> DosageRes.buildDetail(dosage)).collect(Collectors.toList())
+                    : null;
+
+            res = new PrescriptionRes();
+            res.id = prescription.getId();
+            res.doctor = DoctorRes.buildSimple(prescription.getDoctor());
+            res.patient = PatientRes.buildSimple(prescription.getPatient(), null);
+            res.prescriptionDate = prescription.getPrescriptionDate() != null ? prescription.getPrescriptionDate().toString() : null;
+            res.totalCost = prescription.getTotalCost();
         }
 
         return res;

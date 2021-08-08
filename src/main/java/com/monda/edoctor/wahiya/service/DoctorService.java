@@ -1,9 +1,14 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.dto.req.UpdateDoctorReq;
+import com.monda.edoctor.wahiya.dto.req.UpdatePasswordReq;
+import com.monda.edoctor.wahiya.dto.res.DoctorRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
+import com.monda.edoctor.wahiya.exception.WrongParameterException;
+import com.monda.edoctor.wahiya.model.DoctorEntity;
 import com.monda.edoctor.wahiya.repository.DoctorRepository;
-import com.monda.edoctor.wahiya.repository.PatientRepository;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +27,23 @@ public class DoctorService {
         }
 
         return true;
+    }
+
+    public DoctorRes getProfile(UUID doctorId) throws NotFoundException {
+        existsById(doctorId);
+
+        return DoctorRes.buildDetail(doctorRepository.getOne(doctorId));
+    }
+
+    public DoctorRes updateProfile(UUID doctorId, UpdateDoctorReq req) throws NotFoundException {
+        existsById(doctorId);
+
+        var doctor = doctorRepository.getOne(doctorId);
+        doctor.setName(req.getName());
+        doctor.setDoctorCost(req.getDoctorCost());
+
+        doctorRepository.save(doctor);
+
+        return DoctorRes.buildDetail(doctor);
     }
 }

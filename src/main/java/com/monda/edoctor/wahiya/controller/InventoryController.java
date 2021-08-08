@@ -1,12 +1,11 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.req.NewBatchInventoryReq;
-import com.monda.edoctor.wahiya.dto.res.DrugRes;
+import com.monda.edoctor.wahiya.dto.req.UpdateBatchInventoryReq;
 import com.monda.edoctor.wahiya.dto.res.InventoryRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.exception.WrongParameterException;
-import com.monda.edoctor.wahiya.service.DrugService;
 import com.monda.edoctor.wahiya.service.InventoryService;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -45,12 +44,30 @@ public class InventoryController {
         return new ResponseWrapper<List<InventoryRes>>(true, null, data);
     }
 
+    @GetMapping(value = "/doctors/{doctorId}/inventory/all")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper<List<InventoryRes>> getAllInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
+
+        val data = inventoryService.getAllInventoryListOfDoctor(doctorId);
+        return new ResponseWrapper<List<InventoryRes>>(true, null, data);
+    }
+
     @PostMapping(value = "/doctors/{doctorId}/inventory/batch")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseWrapper newBatchInventory(@PathVariable("doctorId") UUID doctorId,
                                              @RequestBody NewBatchInventoryReq req) throws NotFoundException {
 
         inventoryService.newBatchInventory(doctorId, req);
+        return new ResponseWrapper(true, null, null);
+    }
+
+    @PutMapping(value = "/doctors/{doctorId}/inventory/batch/{inventoryBatchId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper updateBatchInventory(@PathVariable("doctorId") UUID doctorId,
+                                                @PathVariable("inventoryBatchId") UUID inventoryBatchId,
+                                                @RequestBody UpdateBatchInventoryReq req) throws NotFoundException {
+
+        inventoryService.updateBatchInventory(doctorId, inventoryBatchId, req);
         return new ResponseWrapper(true, null, null);
     }
 

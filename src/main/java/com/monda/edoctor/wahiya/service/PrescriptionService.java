@@ -1,25 +1,65 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.Config;
+import com.monda.edoctor.wahiya.dto.req.NewPrescriptionReq;
+import com.monda.edoctor.wahiya.dto.res.DiagnosisRes;
 import com.monda.edoctor.wahiya.dto.res.PrescriptionRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
-import com.monda.edoctor.wahiya.model.PrescriptionEntity;
-import com.monda.edoctor.wahiya.repository.PrescriptionRepository;
-import lombok.extern.slf4j.Slf4j;
+import com.monda.edoctor.wahiya.model.*;
+import com.monda.edoctor.wahiya.repository.*;
+import lombok.val;
+import lombok.var;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 public class PrescriptionService {
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(PrescriptionService.class);
     @Autowired
     private PatientService patientService;
 
     @Autowired
     private PrescriptionRepository prescriptionRepository;
+
+    @Autowired
+    private DiagnosisRepository diagnosisRepository;
+
+    @Autowired
+    private DoctorService doctorService;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private DosageRepository dosageRepository;
+
+    public boolean existsById(UUID id) throws NotFoundException {
+        if (!prescriptionRepository.existsById(id)) {
+            log.error("Prescription ID not available : {}", id);
+            throw new NotFoundException("Patient ID not available");
+        }
+
+        return true;
+    }
 
     public List<PrescriptionRes> retrievePrescriptions(UUID patientId) throws NotFoundException {
         patientService.existsById(patientId);
@@ -30,5 +70,104 @@ public class PrescriptionService {
                 .stream()
                 .map(prescription -> PrescriptionRes.buildDetail(prescription))
                 .collect(Collectors.toList());
+    }
+
+    public PrescriptionRes retrievePrescription(UUID prescriptionId) throws NotFoundException {
+        existsById(prescriptionId);
+
+        return PrescriptionRes.buildDetail(prescriptionRepository.getOne(prescriptionId));
+    }
+
+    public List<DiagnosisRes> retrieveDiagnosis() {
+        List<DiagnosisEntity> diagnosisEntityList = diagnosisRepository.findAll(Sort.by("name").ascending());
+
+        return diagnosisEntityList
+                .stream()
+                .map(diagnosis -> DiagnosisRes.buildDetail(diagnosis))
+                .collect(Collectors.toList());
+    }
+
+    public PrescriptionRes newPrescription(UUID doctorId, UUID patientId, NewPrescriptionReq req, MultipartFile attachmentMultipartFile) throws NotFoundException {
+        doctorService.existsById(doctorId);
+        patientService.existsById(patientId);
+
+        DoctorEntity doctor = doctorRepository.getOne(doctorId);
+        PatientEntity patient = patientRepository.getOne(patientId);
+        DiagnosisEntity diagnosis = diagnosisRepository.getOne(req.getDiagnosisId());
+        String fileName = null;
+        if(attachmentMultipartFile != null) {
+            fileName = convertMultipartToFile(attachmentMultipartFile, UUID.randomUUID().toString());
+        }
+
+        val prescription = PrescriptionEntity.builder()
+                .doctor(doctor)
+                .patient(patient)
+                .diagnosis(diagnosis)
+                .illnessSeverity(PrescriptionEntity.IllnessSeverity.valueOf(req.getIllnessSeverity()))
+                .prescriptionDate(LocalDateTime.now())
+                .notes(req.getNotes())
+                .attachmentUrl(fileName)
+                .doctorCost(doctor.getDoctorCost())
+                .build();
+        prescriptionRepository.save(prescription);
+
+        AtomicReference<Double> totalDrugCost = new AtomicReference<>(0.0);
+        List<DosageEntity> dosageEntityList = req.getTreatmentItemList().stream().map(treatmentItem -> {
+            val inventory = inventoryRepository.getOne(treatmentItem.getInventoryId());
+            val drug = inventory.getDrug();
+            double drugCost = inventory.getUnitSellPrice() * treatmentItem.getTreatmentDays() * treatmentItem.getTimesPerDay() * treatmentItem.getDosageCount();
+            totalDrugCost.updateAndGet(v -> (v + drugCost));
+
+            var dosage = DosageEntity.builder()
+                    .prescription(prescription)
+                    .drug(drug)
+                    .treatmentDays(treatmentItem.getTreatmentDays())
+                    .timesPerDay(treatmentItem.getTimesPerDay())
+                    .dosageCount(treatmentItem.getDosageCount().doubleValue())
+                    .dosageRule(DosageEntity.DosageRule.valueOf(treatmentItem.getDosageRule()))
+                    .drugCost(drugCost)
+                    .build();
+            dosageRepository.save(dosage);
+
+            return dosage;
+        }).collect(Collectors.toList());
+
+        prescription.setDrugCost(totalDrugCost.get());
+        prescription.setTotalCost(doctor.getDoctorCost() + totalDrugCost.get());
+        prescription.setDosageList(dosageEntityList);
+        prescriptionRepository.save(prescription);
+
+        return PrescriptionRes.buildDetail(prescription);
+    }
+
+    protected String convertMultipartToFile(MultipartFile multipartFile, String fileName) {
+        if(multipartFile.getOriginalFilename().contains(".")) {
+            int lastIndexOfDot = multipartFile.getOriginalFilename().lastIndexOf(".");
+            String extension = multipartFile.getOriginalFilename().substring(lastIndexOfDot + 1);
+            fileName = fileName + "." + extension;
+        }
+
+        File file = new File(Config.STORAGE_PATH + Config.PATH_SEPARATOR + fileName);
+        try {
+            multipartFile.transferTo(file);
+        } catch(IOException e) {
+            log.error(e.getMessage());
+        }
+
+        return fileName;
+    }
+
+    public List<PrescriptionRes> getPrescriptionListOfDoctor(UUID doctorId, String patientName, int pageNumber, int itemPerPage) throws NotFoundException {
+        doctorService.existsById(doctorId);
+
+        List<PrescriptionEntity> result = new ArrayList<>();
+
+        if(patientName == null || patientName.isEmpty()) {
+            result = prescriptionRepository.findByDoctorId(doctorId, PageRequest.of(pageNumber, itemPerPage));
+        } else {
+            result = prescriptionRepository.findByDoctorIdAndPatientName(doctorId, patientName, PageRequest.of(pageNumber, itemPerPage));
+        }
+
+        return result.stream().map(prescriptionEntity -> PrescriptionRes.buildSimple(prescriptionEntity)).collect(Collectors.toList());
     }
 }

@@ -44,11 +44,11 @@ public class InventoryController {
         return new ResponseWrapper<List<InventoryRes>>(true, null, data);
     }
 
-    @GetMapping(value = "/doctors/{doctorId}/inventory/all")
+    @GetMapping(value = "/doctors/{doctorId}/inventory/available")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseWrapper<List<InventoryRes>> getAllInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
+    public ResponseWrapper<List<InventoryRes>> getAllAvailableInventoryListOfDoctor(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
 
-        val data = inventoryService.getAllInventoryListOfDoctor(doctorId);
+        val data = inventoryService.getAllAvailableInventoryListOfDoctor(doctorId);
         return new ResponseWrapper<List<InventoryRes>>(true, null, data);
     }
 

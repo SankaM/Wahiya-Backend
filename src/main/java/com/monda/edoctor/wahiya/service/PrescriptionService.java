@@ -113,9 +113,13 @@ public class PrescriptionService {
 
         AtomicReference<Double> totalDrugCost = new AtomicReference<>(0.0);
         List<DosageEntity> dosageEntityList = req.getTreatmentItemList().stream().map(treatmentItem -> {
+            val drugCount = treatmentItem.getTreatmentDays() * treatmentItem.getTimesPerDay() * treatmentItem.getDosageCount();
             val inventory = inventoryRepository.getOne(treatmentItem.getInventoryId());
+            inventory.setAvailableUnits(inventory.getAvailableUnits() - drugCount);
+            inventoryRepository.save(inventory);
+
             val drug = inventory.getDrug();
-            double drugCost = inventory.getUnitSellPrice() * treatmentItem.getTreatmentDays() * treatmentItem.getTimesPerDay() * treatmentItem.getDosageCount();
+            double drugCost = inventory.getUnitSellPrice() * drugCount;
             totalDrugCost.updateAndGet(v -> (v + drugCost));
 
             var dosage = DosageEntity.builder()

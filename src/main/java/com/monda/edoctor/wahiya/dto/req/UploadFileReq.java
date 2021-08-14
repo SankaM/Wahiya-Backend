@@ -1,17 +1,16 @@
 package com.monda.edoctor.wahiya.dto.req;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadFileReq {
-    private UUID doctorId;
-    private UUID patientId;
+public class UploadFileReq extends PatientReq{
     private MultipartFile file;
 }

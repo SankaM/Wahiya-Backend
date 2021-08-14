@@ -8,6 +8,10 @@ spring:
     driverClassName: org.h2.Driver
     username: test
     password: test
+  servelet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: false
@@ -21,6 +25,13 @@ spring:
         web-allow-others: false
   flyway:
       enabled: true
+aws:
+  endpoint-url: https://wahiya-edoctor.s3.us-east-2.amazonaws.com
+  bucket-name: wahiya-edoctor-files
+  credentials:
+    access-key: AKIAQKEBPLBKEAZEKGHZ
+    secret-key: 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
+
 # set file base memory so data will not lost when application restart
 #spring.datasource.url=jdbc:h2:file:/data/demo
 #http://localhost:3005/h2-console/login.jsp?jsessionid=024e4a2143b945f65fe58836e656360c

@@ -12,8 +12,8 @@ import lombok.var;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -91,13 +91,26 @@ public class PrescriptionService {
         return PrescriptionRes.buildDetail(prescriptionRepository.getOne(prescriptionId));
     }
 
-    public List<DiagnosisRes> retrieveDiagnosis() {
-        List<DiagnosisEntity> diagnosisEntityList = diagnosisRepository.findAll(Sort.by("name").ascending());
+    public List<DiagnosisRes> retrieveDiagnosis(String name) {
+        List<DiagnosisEntity> diagnosisEntityList = diagnosisRepository.findByLikeName(name);
 
         return diagnosisEntityList
                 .stream()
                 .map(diagnosis -> DiagnosisRes.buildDetail(diagnosis))
                 .collect(Collectors.toList());
+    }
+
+    public DiagnosisRes createOrRetrieve(String name) {
+        var diagnosisOpt = diagnosisRepository.findByExactName(name);
+
+        if(diagnosisOpt.isPresent()) {
+            return DiagnosisRes.buildDetail(diagnosisOpt.get());
+        } else {
+            DiagnosisEntity newDiagnosis = DiagnosisEntity.builder().name(StringUtils.capitalize(name)).build();
+            newDiagnosis = diagnosisRepository.save(newDiagnosis);
+
+            return DiagnosisRes.buildDetail(newDiagnosis);
+        }
     }
 
     public PrescriptionRes newPrescription(UUID doctorId, UUID patientId, NewPrescriptionReq req, MultipartFile attachmentMultipartFile) throws NotFoundException {

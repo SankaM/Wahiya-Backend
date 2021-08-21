@@ -38,8 +38,13 @@ public class PrescriptionController {
     }
 
     @GetMapping(value ="/diagnosis")
-    public ResponseWrapper<List<DiagnosisRes>> getDiagnosis() {
-        return new ResponseWrapper<>(true, null, prescriptionService.retrieveDiagnosis());
+    public ResponseWrapper<List<DiagnosisRes>> getDiagnosis(@RequestParam(value = "name", required = false)  String name) {
+        return new ResponseWrapper<>(true, null, prescriptionService.retrieveDiagnosis(name));
+    }
+
+    @PostMapping(value ="/diagnosis")
+    public ResponseWrapper<DiagnosisRes> createOrRetrieve(@RequestParam(value = "name", required = false)  String name) {
+        return new ResponseWrapper<>(true, null, prescriptionService.createOrRetrieve(name));
     }
 
     @PostMapping(value = "/doctors/{doctorId}/patients/{patientId}/prescription",

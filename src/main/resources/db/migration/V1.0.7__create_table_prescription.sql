@@ -5,6 +5,7 @@ create table wahiya.prescription (
     diagnosis_id uuid,
     illness_severity varchar(255),
     prescription_date timestamp,
+    last_treatment_date timestamp,
     notes varchar(255),
     attachment_url varchar(255),
     doctor_cost double,

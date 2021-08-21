@@ -25,10 +25,16 @@ public class PrescriptionController {
     @Autowired
     private PrescriptionService prescriptionService;
 
-    @GetMapping(value = "/patients/{patientId}/history")
+    @GetMapping(value = "/patients/{patientId}/last-prescription")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseWrapper<List<PrescriptionRes>> getPatientMedicalHistory(@PathVariable("patientId") UUID patientId) throws NotFoundException {
-        return new ResponseWrapper<>(true, null, prescriptionService.retrievePrescriptions(patientId));
+    public ResponseWrapper<List<PrescriptionRes>> getLastPrescription(@PathVariable("patientId") UUID patientId) throws NotFoundException {
+        return new ResponseWrapper<>(true, null, prescriptionService.retrieveLastPrescriptions(patientId));
+    }
+
+    @GetMapping(value = "/patients/{patientId}/current-prescription")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper<List<PrescriptionRes>> getCurrentPrescription(@PathVariable("patientId") UUID patientId) throws NotFoundException {
+        return new ResponseWrapper<>(true, null, prescriptionService.retrieveCurrentPrescriptions(patientId));
     }
 
     @GetMapping(value ="/diagnosis")

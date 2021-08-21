@@ -45,6 +45,9 @@ public class PrescriptionEntity {
     @Column(name = "prescription_date")
     private LocalDateTime prescriptionDate;
 
+    @Column(name = "last_treatment_date")
+    private LocalDateTime lastTreatmentDate;
+
     @Column(name = "notes")
     private String notes;
 

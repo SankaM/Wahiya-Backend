@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +62,22 @@ public class PrescriptionService {
         return true;
     }
 
-    public List<PrescriptionRes> retrievePrescriptions(UUID patientId) throws NotFoundException {
+    public List<PrescriptionRes> retrieveLastPrescriptions(UUID patientId) throws NotFoundException {
         patientService.existsById(patientId);
 
         List<PrescriptionEntity> prescriptionEntityList = prescriptionRepository.findByPatientIdOrderByPrescriptionDateAsc(patientId);
+
+        return prescriptionEntityList
+                .stream()
+                .map(prescription -> PrescriptionRes.buildDetail(prescription))
+                .collect(Collectors.toList());
+    }
+
+    public List<PrescriptionRes> retrieveCurrentPrescriptions(UUID patientId) throws NotFoundException {
+        patientService.existsById(patientId);
+
+        LocalDateTime now = LocalDate.now().atStartOfDay();
+        List<PrescriptionEntity> prescriptionEntityList = prescriptionRepository.findNotExpiredPrescription(patientId, now);
 
         return prescriptionEntityList
                 .stream()
@@ -104,7 +117,7 @@ public class PrescriptionService {
                 .patient(patient)
                 .diagnosis(diagnosis)
                 .illnessSeverity(PrescriptionEntity.IllnessSeverity.valueOf(req.getIllnessSeverity()))
-                .prescriptionDate(LocalDateTime.now())
+                .prescriptionDate(LocalDate.now().atStartOfDay())
                 .notes(req.getNotes())
                 .attachmentUrl(fileName)
                 .doctorCost(doctor.getDoctorCost())
@@ -136,9 +149,16 @@ public class PrescriptionService {
             return dosage;
         }).collect(Collectors.toList());
 
+        // calculate last treatment date
+        Integer longestDosageTreatmentDays = 0;
+        for(DosageEntity dosageEntity: dosageEntityList) {
+            if(longestDosageTreatmentDays < dosageEntity.getTreatmentDays()) longestDosageTreatmentDays = dosageEntity.getTreatmentDays();
+        }
+
         prescription.setDrugCost(totalDrugCost.get());
         prescription.setTotalCost(doctor.getDoctorCost() + totalDrugCost.get());
         prescription.setDosageList(dosageEntityList);
+        prescription.setLastTreatmentDate(prescription.getPrescriptionDate().plusDays(longestDosageTreatmentDays));
         prescriptionRepository.save(prescription);
 
         return PrescriptionRes.buildDetail(prescription);

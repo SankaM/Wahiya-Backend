@@ -117,6 +117,7 @@ public class InventoryService {
         inventory.setLastUpdated(LocalDateTime.now());
         inventory.setUnitSellPrice(req.getUnitSellPrice());
         inventory.setUnitPriceCurrency(req.getUnitSellCurrency());
+        inventory.setUnitThresholdWarning(req.getUnitThresholdWarning());
         inventory.setLastUpdated(LocalDateTime.now());
 
         // InventoryBatch entity

@@ -37,6 +37,9 @@ public class InventoryEntity {
     @Column(name = "unit_price_currency")
     private String unitPriceCurrency;
 
+    @Column(name = "unit_threshold_warning")
+    private Double unitThresholdWarning;
+
     @Column(name = "is_available")
     private Boolean isAvailable = true;
 

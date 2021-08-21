@@ -22,6 +22,8 @@ public class NewBatchInventoryReq {
 
     private Double unitCount;
 
+    private Double unitThresholdWarning;
+
     private String batchDate;
 
     private String expiryDate;

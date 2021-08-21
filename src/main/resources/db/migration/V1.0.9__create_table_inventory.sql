@@ -3,6 +3,7 @@ create table wahiya.inventory (
     doctor_id uuid,
     drug_id uuid,
     available_units double,
+    unit_threshold_warning double,
     unit_sell_price double,
     unit_price_currency varchar(255),
     is_available boolean default true,

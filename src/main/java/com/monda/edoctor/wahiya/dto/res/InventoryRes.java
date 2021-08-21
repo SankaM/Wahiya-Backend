@@ -22,6 +22,8 @@ public class InventoryRes {
 
     private Double availableUnits;
 
+    private Double unitThresholdWarning;
+
     private Double unitSellPrice;
 
     private String unitPriceCurrency;
@@ -38,6 +40,7 @@ public class InventoryRes {
             res.id = i.getId();
             res.drug = DrugRes.buildDetail(i.getDrug());
             res.availableUnits = i.getAvailableUnits();
+            res.unitThresholdWarning = i.getUnitThresholdWarning();
             res.unitSellPrice = i.getUnitSellPrice();
             res.unitPriceCurrency = i.getUnitPriceCurrency();
             res.isAvailable = i.getIsAvailable();
@@ -54,6 +57,7 @@ public class InventoryRes {
             res.id = i.getId();
             res.drug = DrugRes.buildDetail(i.getDrug());
             res.availableUnits = i.getAvailableUnits();
+            res.unitThresholdWarning = i.getUnitThresholdWarning();
             res.unitSellPrice = i.getUnitSellPrice();
             res.unitPriceCurrency = i.getUnitPriceCurrency();
             res.isAvailable = i.getIsAvailable();

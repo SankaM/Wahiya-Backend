@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.dto.req.PatientRegistrationReq;
+import com.monda.edoctor.wahiya.dto.req.UpdatePatientHealthProfileReq;
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
@@ -122,6 +123,15 @@ public class PatientService {
         patient.setDoctor(doctorRepository.getOne(doctorId));
 
         patientRepository.save(patient);
+    }
+
+    public void updateHealthProfileOfPatient(UpdatePatientHealthProfileReq req) throws NotFoundException {
+        existsById(req.getPatientId());
+
+        PatientEntity patientEntity = patientRepository.getOne(req.getPatientId());
+        patientEntity.setHealthProfile(req.getHealthProfile());
+
+        patientRepository.save(patientEntity);
     }
 
     protected DiagnosisEntity findLastPatientDiagnosis(UUID patientId) {

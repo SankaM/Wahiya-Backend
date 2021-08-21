@@ -1,6 +1,7 @@
 package com.monda.edoctor.wahiya.controller;
 
 import com.monda.edoctor.wahiya.dto.req.PatientRegistrationReq;
+import com.monda.edoctor.wahiya.dto.req.UpdatePatientHealthProfileReq;
 import com.monda.edoctor.wahiya.dto.res.PatientRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
@@ -58,6 +59,14 @@ public class PatientController {
                                            @RequestBody PatientRegistrationReq req) throws NotFoundException, DuplicateContentException {
 
         patientService.registerPatient(doctorId, req);
+
+        return new ResponseWrapper(true, null, null);
+    }
+
+    @PutMapping(value = "/patients/update-profile-health")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public ResponseWrapper updateProfileHealth(@RequestBody UpdatePatientHealthProfileReq req) throws NotFoundException, DuplicateContentException {
+        patientService.updateHealthProfileOfPatient(req);
 
         return new ResponseWrapper(true, null, null);
     }

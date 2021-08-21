@@ -28,6 +28,8 @@ public class PatientRegistrationReq {
 
     private String email;
 
+    private String healthProfile;
+
     public PatientEntity buildEntity() {
         PatientEntity entity = PatientEntity.builder()
                 .firstName(firstName)
@@ -38,6 +40,7 @@ public class PatientRegistrationReq {
                 .nic(nic)
                 .userName(userName)
                 .email(email)
+                .healthProfile(healthProfile)
                 .build();
 
         return entity;

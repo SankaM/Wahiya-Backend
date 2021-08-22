@@ -29,7 +29,7 @@ public class PrescriptionRes {
 
     private String notes;
 
-    private String attachmentUrl;
+    private UUID attachmentId;
 
     private Double doctorCost;
 
@@ -55,12 +55,11 @@ public class PrescriptionRes {
             res.illnessSeverity = prescription.getIllnessSeverity();
             res.prescriptionDate = prescription.getPrescriptionDate() != null ? prescription.getPrescriptionDate().toString() : null;
             res.notes = prescription.getNotes();
-            res.attachmentUrl = prescription.getAttachmentUrl();
             res.doctorCost = prescription.getDoctorCost();
             res.drugCost = prescription.getDrugCost();
             res.totalCost = prescription.getTotalCost();
             res.dosageList = dosageList;
-            res.attachmentUrl = prescription.getAttachmentUrl();
+            res.attachmentId = prescription.getAttachmentId();
         }
 
         return res;

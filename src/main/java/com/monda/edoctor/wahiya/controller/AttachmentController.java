@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -61,6 +60,20 @@ public class AttachmentController {
         AttachmentReq attachmentReq = AttachmentReq.builder()
                 .patientId(patientId)
                 .doctorId(doctorId)
+                .attachmentId(attachmentId)
+                .build();
+        AttachmentRes attachmentRes = attachmentService.getAttachment(attachmentReq);
+
+        return ResponseEntity.ok()
+                .contentType(contentType(attachmentRes.getAttachmentKey()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" + attachmentRes.getAttachmentKey() + "\"")
+                .body(attachmentRes.getDownloadInputStream().toByteArray());
+    }
+
+    @GetMapping(value = "/dummy-download/{attachmentId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity<byte[]> dummyDownload(@PathVariable("attachmentId") UUID attachmentId) throws IOException {
+        AttachmentReq attachmentReq = AttachmentReq.builder()
                 .attachmentId(attachmentId)
                 .build();
         AttachmentRes attachmentRes = attachmentService.getAttachment(attachmentReq);

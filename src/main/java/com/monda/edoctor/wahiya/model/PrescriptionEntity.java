@@ -51,8 +51,8 @@ public class PrescriptionEntity {
     @Column(name = "notes")
     private String notes;
 
-    @Column(name = "attachment_url")
-    private String attachmentUrl;
+    @Column(name = "attachment_id")
+    private UUID attachmentId;
 
     @Column(name = "doctor_cost")
     private Double doctorCost;

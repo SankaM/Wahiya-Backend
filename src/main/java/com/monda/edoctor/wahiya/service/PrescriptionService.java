@@ -2,8 +2,10 @@ package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.Config;
 import com.monda.edoctor.wahiya.dto.req.NewPrescriptionReq;
+import com.monda.edoctor.wahiya.dto.req.UploadFileReq;
 import com.monda.edoctor.wahiya.dto.res.DiagnosisRes;
 import com.monda.edoctor.wahiya.dto.res.PrescriptionRes;
+import com.monda.edoctor.wahiya.dto.res.UploadFileRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
 import com.monda.edoctor.wahiya.model.*;
 import com.monda.edoctor.wahiya.repository.*;
@@ -52,6 +54,9 @@ public class PrescriptionService {
 
     @Autowired
     private DosageRepository dosageRepository;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     public boolean existsById(UUID id) throws NotFoundException {
         if (!prescriptionRepository.existsById(id)) {
@@ -120,9 +125,14 @@ public class PrescriptionService {
         DoctorEntity doctor = doctorRepository.getOne(doctorId);
         PatientEntity patient = patientRepository.getOne(patientId);
         DiagnosisEntity diagnosis = diagnosisRepository.getOne(req.getDiagnosisId());
-        String fileName = null;
+        UploadFileRes uploadFileRes = null;
         if(attachmentMultipartFile != null) {
-            fileName = convertMultipartToFile(attachmentMultipartFile, UUID.randomUUID().toString());
+            try {
+                UploadFileReq uploadFileReq = new UploadFileReq(attachmentMultipartFile);
+                uploadFileRes = attachmentService.uploadFile(uploadFileReq);
+            } catch(IOException e) {
+                log.error("Error upload attachment", e);
+            }
         }
 
         val prescription = PrescriptionEntity.builder()
@@ -132,7 +142,7 @@ public class PrescriptionService {
                 .illnessSeverity(PrescriptionEntity.IllnessSeverity.valueOf(req.getIllnessSeverity()))
                 .prescriptionDate(LocalDate.now().atStartOfDay())
                 .notes(req.getNotes())
-                .attachmentUrl(fileName)
+                .attachmentId(uploadFileRes != null ? uploadFileRes.getAttachmentDetails().getAttachmentId() : null)
                 .doctorCost(doctor.getDoctorCost())
                 .build();
         prescriptionRepository.save(prescription);

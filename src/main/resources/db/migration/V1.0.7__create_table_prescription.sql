@@ -7,7 +7,8 @@ create table wahiya.prescription (
     prescription_date timestamp,
     last_treatment_date timestamp,
     notes varchar(255),
-    attachment_url varchar(255),
+--    attachment_url varchar(255),
+    attachment_id uuid,
     doctor_cost double,
     drug_cost double,
     total_cost double

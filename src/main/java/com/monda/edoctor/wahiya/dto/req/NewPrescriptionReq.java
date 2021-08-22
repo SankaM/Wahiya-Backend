@@ -33,3 +33,24 @@ public class NewPrescriptionReq {
 
     private String notes;
 }
+
+/*
+{
+    "diagnosisId": "f3560a74-bfa8-0002-8529-0242ac130003",
+    "illnessSeverity": "HIGH",
+    "notes": "bla bla bla",
+    "treatmentItemList": [
+        {
+            "inventoryId": "f3560a74-bfa8-0000-8529-0242ac1300aa",
+            "treatmentDays": 1,
+            "timesPerDay": 2,
+            "dosageCount": 3,
+            "dosageRule": "BEFORE_MEAL"
+        }
+    ]
+}
+
+attachmentId = 1e18d6ed-4c43-457d-b6d3-d877d6e90e03
+
+1e18d6ed-4c43-457d-b6d3-d877d6e90e03	null	null	Appointment_Entity.png	null/null/Appointment_Entity.png
+ */

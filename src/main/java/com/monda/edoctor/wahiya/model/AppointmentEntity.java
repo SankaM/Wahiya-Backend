@@ -15,13 +15,17 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AppointmentEntity {
     public enum AppointmentStatus {
-        REQUESTED, CONFIRMED, DECLINED
+        REQUESTED, CONFIRMED, DECLINED, PRESCRIBED
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private DoctorEntity doctor;
 
     @ManyToOne
     @JoinColumn(name = "work_hour_id")

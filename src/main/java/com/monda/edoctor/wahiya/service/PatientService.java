@@ -6,15 +6,17 @@ import com.monda.edoctor.wahiya.dto.res.PatientRes;
 import com.monda.edoctor.wahiya.exception.DuplicateContentException;
 import com.monda.edoctor.wahiya.exception.NoContentException;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
-import com.monda.edoctor.wahiya.model.*;
+import com.monda.edoctor.wahiya.model.DiagnosisEntity;
+import com.monda.edoctor.wahiya.model.PatientEntity;
+import com.monda.edoctor.wahiya.model.PrescriptionEntity;
 import com.monda.edoctor.wahiya.repository.DoctorRepository;
 import com.monda.edoctor.wahiya.repository.PatientRepository;
 import com.monda.edoctor.wahiya.repository.PrescriptionRepository;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,18 +137,11 @@ public class PatientService {
     }
 
     protected DiagnosisEntity findLastPatientDiagnosis(UUID patientId) {
-        val prescriptions = prescriptionRepository.findByPatientIdOrderByPrescriptionDateAsc(patientId);
+        LocalDateTime now = LocalDate.now().atStartOfDay();
+        List<PrescriptionEntity> prescriptions = prescriptionRepository.findNotExpiredPrescription(patientId, now);
 
-        for (PrescriptionEntity p : prescriptions) {
-            int treatmentDays = 0;
-
-            for (DosageEntity d : p.getDosageList()) {
-                if (d.getTreatmentDays() > treatmentDays) treatmentDays = d.getTreatmentDays();
-            }
-
-            if (p.getPrescriptionDate().plusDays(treatmentDays).isAfter(LocalDateTime.now())) {
-                return p.getDiagnosis();
-            }
+        if(prescriptions != null && prescriptions.size() > 0) {
+            return prescriptions.get(0).getDiagnosis();
         }
 
         return null;

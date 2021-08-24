@@ -15,6 +15,9 @@ import java.util.UUID;
 public interface PrescriptionRepository extends JpaRepository<PrescriptionEntity, UUID> {
     List<PrescriptionEntity> findByPatientIdOrderByPrescriptionDateAsc(UUID patientId);
 
+    @Query("select p from PrescriptionEntity p where p.patient.id = :patientId and p.lastTreatmentDate < :currentDate ")
+    List<PrescriptionEntity> findExpiredPrescription(UUID patientId, LocalDateTime currentDate);
+
     @Query("select p from PrescriptionEntity p where p.patient.id = :patientId and p.lastTreatmentDate >= :currentDate ")
     List<PrescriptionEntity> findNotExpiredPrescription(UUID patientId, LocalDateTime currentDate);
 

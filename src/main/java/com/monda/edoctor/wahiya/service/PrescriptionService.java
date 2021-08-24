@@ -70,7 +70,8 @@ public class PrescriptionService {
     public List<PrescriptionRes> retrieveLastPrescriptions(UUID patientId) throws NotFoundException {
         patientService.existsById(patientId);
 
-        List<PrescriptionEntity> prescriptionEntityList = prescriptionRepository.findByPatientIdOrderByPrescriptionDateAsc(patientId);
+        LocalDateTime now = LocalDate.now().atStartOfDay();
+        List<PrescriptionEntity> prescriptionEntityList = prescriptionRepository.findExpiredPrescription(patientId, now);
 
         return prescriptionEntityList
                 .stream()

@@ -1,10 +1,12 @@
 package com.monda.edoctor.wahiya.controller;
 
+import com.monda.edoctor.wahiya.dto.req.UpdateAppointmentStatusReq;
 import com.monda.edoctor.wahiya.dto.req.UpdateDoctorReq;
 import com.monda.edoctor.wahiya.dto.res.AppointmentRes;
 import com.monda.edoctor.wahiya.dto.res.DoctorRes;
 import com.monda.edoctor.wahiya.dto.res.ResponseWrapper;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
+import com.monda.edoctor.wahiya.exception.WrongParameterException;
 import com.monda.edoctor.wahiya.service.AppointmentService;
 import com.monda.edoctor.wahiya.service.DoctorService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +48,18 @@ public class DoctorController {
         return new ResponseWrapper<>(true, null, appointmentService.retrievePastAppointment(doctorId));
     }
 
-    @GetMapping(value = "/doctors/{doctorId}/appointment/future")
+    @GetMapping(value = "/doctors/{doctorId}/appointment/upcoming")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseWrapper<List<AppointmentRes>> getFutureAppointment(@PathVariable("doctorId") UUID doctorId) throws NotFoundException {
         return new ResponseWrapper<>(true, null, appointmentService.retrieveFutureAppointment(doctorId));
+    }
+
+    @PutMapping(value = "/doctors/{doctorId}/appointment/{appointmentId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseWrapper updateAppointment(@PathVariable("doctorId") UUID doctorId,
+                                             @PathVariable("appointmentId") UUID appointmentId,
+                                             @RequestBody UpdateAppointmentStatusReq req) throws NotFoundException, WrongParameterException {
+        appointmentService.updateAppointmentStatus(doctorId, appointmentId, req);
+        return new ResponseWrapper<>(true, null, null);
     }
 }

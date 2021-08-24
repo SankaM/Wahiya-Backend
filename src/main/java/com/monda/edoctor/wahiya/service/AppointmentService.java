@@ -1,9 +1,12 @@
 package com.monda.edoctor.wahiya.service;
 
+import com.monda.edoctor.wahiya.dto.req.UpdateAppointmentStatusReq;
 import com.monda.edoctor.wahiya.dto.res.AppointmentRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
+import com.monda.edoctor.wahiya.exception.WrongParameterException;
 import com.monda.edoctor.wahiya.repository.AppointmentRepository;
 import lombok.extern.slf4j.Slf4j;
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +45,18 @@ public class AppointmentService {
                 .stream()
                 .map(appointment -> AppointmentRes.build(appointment))
                 .collect(Collectors.toList());
+    }
+
+    public void updateAppointmentStatus(UUID doctorId, UUID appointmentId, UpdateAppointmentStatusReq req) throws NotFoundException, WrongParameterException {
+        doctorService.existsById(doctorId);
+        var appointmentOpt = appointmentRepository.findByDoctorIdAndAppointmentId(doctorId, appointmentId);
+
+        if(!appointmentOpt.isPresent()) {
+            throw new NotFoundException("No Appointment for specified doctor");
+        }
+
+        var appointment = appointmentOpt.get();
+        appointment.setStatus(req.getAppointmentStatus());
+        appointmentRepository.save(appointment);
     }
 }

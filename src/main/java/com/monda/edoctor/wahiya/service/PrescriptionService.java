@@ -58,6 +58,9 @@ public class PrescriptionService {
     @Autowired
     private AttachmentService attachmentService;
 
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
     public boolean existsById(UUID id) throws NotFoundException {
         if (!prescriptionRepository.existsById(id)) {
             log.error("Prescription ID not available : {}", id);
@@ -184,6 +187,14 @@ public class PrescriptionService {
         prescription.setDosageList(dosageEntityList);
         prescription.setLastTreatmentDate(prescription.getPrescriptionDate().plusDays(longestDosageTreatmentDays));
         prescriptionRepository.save(prescription);
+
+        // Relate Appointment - Prescription
+        if(req.getAppointmentId() != null) {
+            var appointment = appointmentRepository.getOne(req.getAppointmentId());
+            appointment.setPrescription(prescription);
+            appointment.setStatus(AppointmentEntity.AppointmentStatus.PRESCRIBED);
+            appointmentRepository.save(appointment);
+        }
 
         return PrescriptionRes.buildDetail(prescription);
     }

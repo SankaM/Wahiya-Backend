@@ -35,6 +35,10 @@ public class AppointmentEntity {
     @JoinColumn(name = "patient_id")
     private PatientEntity patient;
 
+    @ManyToOne
+    @JoinColumn(name = "prescription_id")
+    private PrescriptionEntity prescription;
+
     @Column(name = "appointment_date")
     private LocalDateTime appointmentDate;
 

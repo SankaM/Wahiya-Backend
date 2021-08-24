@@ -32,6 +32,8 @@ public class NewPrescriptionReq {
     private List<TreatmentItem> treatmentItemList;
 
     private String notes;
+
+    private UUID appointmentId;
 }
 
 /*
@@ -39,6 +41,7 @@ public class NewPrescriptionReq {
     "diagnosisId": "f3560a74-bfa8-0002-8529-0242ac130003",
     "illnessSeverity": "HIGH",
     "notes": "bla bla bla",
+    "appointmentId": "f3560a74-bfa8-11eb-aaaa-0242ac130004",
     "treatmentItemList": [
         {
             "inventoryId": "f3560a74-bfa8-0000-8529-0242ac1300aa",

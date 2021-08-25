@@ -70,9 +70,9 @@ public class AttachmentController {
                 .body(attachmentRes.getDownloadInputStream().toByteArray());
     }
 
-    @GetMapping(value = "/dummy-download/{attachmentId}")
+    @GetMapping(value = "/download/{attachmentId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<byte[]> dummyDownload(@PathVariable("attachmentId") UUID attachmentId) throws IOException {
+    public ResponseEntity<byte[]> download(@PathVariable("attachmentId") UUID attachmentId) throws IOException {
         AttachmentReq attachmentReq = AttachmentReq.builder()
                 .attachmentId(attachmentId)
                 .build();

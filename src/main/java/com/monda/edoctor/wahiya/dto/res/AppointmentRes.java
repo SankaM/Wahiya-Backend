@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.monda.edoctor.wahiya.model.AppointmentEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Setter
@@ -22,6 +21,8 @@ public class AppointmentRes {
 
     private AppointmentEntity.AppointmentStatus status;
 
+    private UUID prescriptionId;
+
     public static AppointmentRes build(AppointmentEntity appointment) {
         AppointmentRes res = null;
 
@@ -31,6 +32,7 @@ public class AppointmentRes {
             res.patient = PatientRes.buildSimple(appointment.getPatient(), null);
             res.appointmentDate = appointment.getAppointmentDate() != null ? appointment.getAppointmentDate().toString() : null;
             res.status = appointment.getStatus();
+            res.prescriptionId = appointment.getPrescription() != null ? appointment.getPrescription().getId() : null;
         }
 
         return res;

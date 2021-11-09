@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AppointmentEntity {
     public enum AppointmentStatus {
-        REQUESTED, ACCEPTED, DECLINED, PRESCRIBED
+        REQUESTED, ACCEPTED, DECLINED, PRESCRIBED, CANCELLED
     }
 
     @Id

@@ -1,11 +1,8 @@
 package com.monda.edoctor.wahiya.service;
 
 import com.monda.edoctor.wahiya.dto.req.UpdateDoctorReq;
-import com.monda.edoctor.wahiya.dto.req.UpdatePasswordReq;
 import com.monda.edoctor.wahiya.dto.res.DoctorRes;
 import com.monda.edoctor.wahiya.exception.NotFoundException;
-import com.monda.edoctor.wahiya.exception.WrongParameterException;
-import com.monda.edoctor.wahiya.model.DoctorEntity;
 import com.monda.edoctor.wahiya.repository.DoctorRepository;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;

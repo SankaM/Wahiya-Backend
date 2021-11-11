@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Table(name = "work_hour", schema = "wahiya")
@@ -23,6 +25,9 @@ public class WorkHourEntity {
     @Enumerated(EnumType.STRING)
     private DayOfWeek dayOfWeek;
 
-    @Column(name = "time_")
-    private String time;
+    @Column(name = "start_time")
+    private LocalTime startTime;
+
+    @Column(name = "end_time")
+    private LocalTime endTime;
 }

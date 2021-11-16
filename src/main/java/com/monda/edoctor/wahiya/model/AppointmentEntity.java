@@ -45,4 +45,7 @@ public class AppointmentEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private AppointmentStatus status;
+
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
 }

@@ -5,5 +5,6 @@ create table wahiya.appointment (
     patient_id uuid,
     prescription_id uuid,
     appointment_date timestamp,
+    updated_date timestamp,
     status varchar(255)
 );
